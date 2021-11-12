@@ -20,7 +20,6 @@ func AgentRegister(req request.AgentRegisterReq) {
 		return
 	}
 	if resp.StatusCode == 200 {
-		fmt.Println(body)
 		var res response.AgentRegisterRes
 		err := json.Unmarshal([]byte(body), &res)
 		if err != nil {
@@ -42,7 +41,6 @@ func Profiles(req request.HookRuleReq) {
 		return
 	}
 	if resp.StatusCode == 200 {
-		fmt.Println(body)
 		var res response.AgentRegisterRes
 		err := json.Unmarshal([]byte(body), &res)
 		if err != nil {

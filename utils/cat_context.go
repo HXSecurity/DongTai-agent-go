@@ -12,10 +12,11 @@ import (
 
 func CatContext() {
 	pc, file, line, _ := runtime.Caller(2)
+	log.Println("请求唯一串ID:" + CatGoroutineID())
 	log.Println("调用方法等文件：" + file)
 	log.Printf("调用方法所在行数:%d", line)
 	f := runtime.FuncForPC(pc)
-	log.Printf("数入口栈地址：%d",f.Entry())
+	log.Printf("数入口栈地址：%d", f.Entry())
 	log.Println("调用此函数等方法：" + f.Name())
 	const size = 64 << 10
 	buf := make([]byte, size)

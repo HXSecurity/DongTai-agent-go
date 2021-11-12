@@ -4,6 +4,7 @@ import (
 	"go-agent/api"
 	"go-agent/global"
 	"go-agent/model/request"
+	"go-agent/utils"
 )
 
 func init() {
@@ -29,6 +30,29 @@ func init() {
 }
 
 func main() {
+	go func() {
+		utils.CatGoroutineID()
+	}()
+	go func() {
+		utils.CatGoroutineID()
+
+	}()
+	go func() {
+		utils.CatGoroutineID()
+		utils.CatGoroutineID()
+		utils.CatGoroutineID()
+
+	}()
+	go func() {
+		utils.CatGoroutineID()
+
+	}()
+	utils.CatGoroutineID()
+	utils.CatGoroutineID()
+	utils.CatGoroutineID()
+	for {
+
+	}
 	//// 此处模拟的接口调用后 对hook map中的声明过的hook进行Hook 和 Unhook 用户不会执行到main 但是引入包必然会触发init 的生命周期
 	//hook.HookFunc("http")
 	//hook.HookFunc("exec")
