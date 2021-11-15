@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"go-agent/api"
 	"go-agent/global"
 	"go-agent/model/request"
@@ -31,25 +32,31 @@ func init() {
 
 func main() {
 	go func() {
-		utils.CatGoroutineID()
+		fmt.Println(utils.CatGoroutineID())
+		//获取当前开启的go协成的唯一ID 同一个协程内部完全相同
 	}()
 	go func() {
-		utils.CatGoroutineID()
+		fmt.Println(utils.CatGoroutineID())
+		go func() {
+			fmt.Println(utils.CatGoroutineID())
+
+		}()
+		//获取当前开启的go协成的唯一ID 同一个协程内部完全相同
 
 	}()
 	go func() {
-		utils.CatGoroutineID()
-		utils.CatGoroutineID()
-		utils.CatGoroutineID()
+		fmt.Println(utils.CatGoroutineID())
+
+		//获取当前开启的go协成的唯一ID 同一个协程内部完全相同
 
 	}()
 	go func() {
-		utils.CatGoroutineID()
+		fmt.Println(utils.CatGoroutineID())
 
+		//获取当前开启的go协成的唯一ID 同一个协程内部完全相同
 	}()
-	utils.CatGoroutineID()
-	utils.CatGoroutineID()
-	utils.CatGoroutineID()
+	fmt.Println(utils.CatGoroutineID())
+	// 上述四个为测试携程 最后为主携程
 	for {
 
 	}
@@ -59,15 +66,19 @@ func main() {
 	//
 	//c:= new(http.Client)
 	//c.Get("https://www.baidu.com")
-	//
+	//此处的原生http已被自己开发的http get接口方法捕捉
 	//exec.Command("ls")
+	//此处的原生Command已被自己开发的Command接口方法捕捉
 	//// 注销方法
 	//
 	//hook.UnHookFunc("http")
+	// 卸载捕获
 	//hook.UnHookFunc("exec")
+	// 卸载捕获
 	//
 	//
 	//c.Get("https://www.baidu123.com")
+	// 已经恢复到原生
 	//
 	//exec.Command("clear")
 }
