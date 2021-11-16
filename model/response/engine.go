@@ -8,7 +8,7 @@ type ResBase struct {
 type AgentRegisterRes struct {
 	ResBase
 	Data struct {
-		Id            string `json:"id"`
-		CoreAutoStart int    `json:"coreAutoStart"`
+		Id            int `json:"id"`
+		CoreAutoStart int `json:"coreAutoStart"`
 	} `json:"data"`
 }

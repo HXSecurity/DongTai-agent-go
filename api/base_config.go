@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/parnurzeal/gorequest"
 	"go-agent/global"
 	"go-agent/utils"
@@ -21,6 +22,7 @@ func NewRequest() *gorequest.SuperAgent {
 func POST(url string, body interface{}) *gorequest.SuperAgent {
 	s, _ := json.Marshal(body)
 	jsonStr := utils.GzipStr(string(s))
+	fmt.Println(string(s))
 	request := NewRequest()
 	request.Post(global.Config.OpenAPI+url).
 		Set("Content-Type", "application/json").

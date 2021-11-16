@@ -10,7 +10,7 @@ import (
 
 //用于捕捉上下文的cat函数
 
-func CatContext() {
+func CatContext() (groupId string) {
 	pc, file, line, _ := runtime.Caller(2)
 	log.Println("请求唯一串ID:" + CatGoroutineID())
 	log.Println("调用方法等文件：" + file)
@@ -39,4 +39,5 @@ func CatContext() {
 			fmt.Printf("第%d步调用文件为:%s\n", (len(lineArr)-i)/2+1, lineArr[i])
 		}
 	}
+	return CatGoroutineID()
 }
