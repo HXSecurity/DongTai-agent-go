@@ -1,6 +1,7 @@
 package service
 
 import (
+	"bytes"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -95,13 +96,42 @@ func AgentRegister() (err error) {
 			if err != nil {
 				fmt.Println(err)
 			}
-			cmd := exec.Command("netstat", "-antup", "|grep", req.Pid)
-			output, err := cmd.Output()
+			var cmd *exec.Cmd
+			var strErr bytes.Buffer
+			var out bytes.Buffer
+			fmt.Println(req.Pid)
+			if OS == "windows" {
+				cmd = exec.Command("netstat", "-ano")
+				cmd.Stderr = &strErr
+				cmd.Stdout = &out
+			} else {
+				cmd = exec.Command("netstat", "-antup", "|grep", req.Pid)
+				cmd.Stderr = &strErr
+				cmd.Stdout = &out
+			}
+			err = cmd.Run()
+			output := out.String()
 			if err != nil {
 				return
 			}
-			r := regexp.MustCompile(`:::\s*(.*?)\s* `)
-			matches := r.FindAllStringSubmatch(string(output), -1)
+			var matches [][]string
+			if OS == "windows" {
+				str := ""
+				for {
+					line, setErr := out.ReadBytes('\n')
+					if setErr != nil {
+						break
+					}
+					if strings.Index(string(line), " "+req.Pid) > -1 {
+						str += string(line) + "\n"
+					}
+				}
+				r := regexp.MustCompile(`0.0.0.0:\s*(.*?)\s* `)
+				matches = r.FindAllStringSubmatch(str, -1)
+			} else {
+				r := regexp.MustCompile(`:::\s*(.*?)\s* `)
+				matches = r.FindAllStringSubmatch(output, -1)
+			}
 			if matches[0] != nil {
 				if matches[0][1] != "" {
 					req.ServerPort = matches[0][1]
