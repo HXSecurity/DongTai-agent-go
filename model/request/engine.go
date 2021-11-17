@@ -68,6 +68,7 @@ type Function struct {
 	Language      string `json:"language,omitempty"`
 	ClientIp      string `json:"clientIp,omitempty"`
 	Secure        bool   `json:"secure,omitempty"`
+	QueryString   string `json:"queryString,omitempty"`
 	ReplayRequest bool   `json:"replayRequest,omitempty"`
 	Method        string `json:"method,omitempty"`
 	ReqHeader     string `json:"reqHeader,omitempty"`

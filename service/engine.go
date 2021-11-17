@@ -144,7 +144,7 @@ func AgentRegister() (err error) {
 					global.AgentId = agentId
 					go func() {
 						for {
-							time.Sleep(5 * time.Second)
+							time.Sleep(1 * time.Second)
 							PingPang()
 						}
 					}()
@@ -180,7 +180,6 @@ func PingPang() {
 	if err != nil {
 		return
 	}
-	fmt.Println(s)
 	var req request.UploadReq
 
 	cpuMap := make(map[string]string)
@@ -189,13 +188,14 @@ func PingPang() {
 	for _, v := range s.Cpu.Cpus {
 		cpus += v
 	}
-	cpuRate := fmt.Sprintf("%.2f", cpus)
+	cpuRate := fmt.Sprintf("%.2f", cpus/float64(len(s.Cpu.Cpus)))
 	memoryRate := fmt.Sprintf("%.2f", float64(s.Rrm.UsedMB)/float64(s.Rrm.TotalMB))
+	total := strconv.Itoa(s.Rrm.TotalMB) + "MB"
+	use := strconv.Itoa(s.Rrm.UsedMB) + "MB"
 	cpuMap["rate"] = cpuRate
-	memoryMap["total"] = strconv.Itoa(s.Rrm.TotalMB) + "MB"
-	memoryMap["use"] = strconv.Itoa(s.Rrm.UsedMB) + "MB"
+	memoryMap["total"] = total
+	memoryMap["use"] = use
 	memoryMap["rate"] = memoryRate
-
 	cpuByte, _ := json.Marshal(cpuMap)
 	memoryByte, _ := json.Marshal(memoryMap)
 

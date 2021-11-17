@@ -66,11 +66,17 @@ func ReportUpload(req request.UploadReq) {
 		for _, v := range errs {
 			fmt.Println(v)
 		}
+		fmt.Println("boom")
 		return
 	}
 	if resp.StatusCode == 200 {
 		var res response.ResBase
 		err := json.Unmarshal([]byte(body), &res)
+		if res.Status == 201 {
+			fmt.Println("pang")
+		} else {
+			fmt.Println(res.Msg)
+		}
 		if err != nil {
 			fmt.Println(err)
 			return

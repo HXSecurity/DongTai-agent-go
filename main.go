@@ -2,8 +2,7 @@ package main
 
 import (
 	"fmt"
-	_ "go-agent/core/hookServerReq"
-	_ "go-agent/core/hookhttp"
+	_ "go-agent/core/hookServer"
 	"go-agent/global"
 	"go-agent/hook"
 	"go-agent/service"
@@ -25,8 +24,8 @@ func doRequest(w http.ResponseWriter, r *http.Request) {
 	//    fmt.Println("key:", k)
 	//    fmt.Println("value:", strings.Join(v, ""))
 	//}
+	w.Header().Set("test", "test")
 	fmt.Fprintf(w, "service start...") //这个写入到w的是输出到客户端的 也可以用下面的 io.WriteString对象
-
 	//注意:如果没有调用ParseForm方法，下面无法获取表单的数据
 	//query := r.URL.Query()
 	var uid string // 初始化定义变量
@@ -39,7 +38,7 @@ func doRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	hook.HookFunc("serverReq")
+	hook.HookFunc("hookServer")
 	//service.PingPang()
 	http.HandleFunc("/test", doRequest) //   设置访问路由
 	_ = http.ListenAndServe(":9090", nil)

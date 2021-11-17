@@ -1,4 +1,4 @@
-package hookServerReq
+package hookServer
 
 import (
 	"fmt"
@@ -8,19 +8,19 @@ import (
 )
 
 func init() {
-	model.HookMap["serverReq"] = new(HookServerReq)
+	model.HookMap["hookServer"] = new(HookServer)
 }
 
-type HookServerReq struct {
+type HookServer struct {
 }
 
-func (h *HookServerReq) Hook() {
+func (h *HookServer) Hook() {
 	mux := &http.ServeMux{}
 	err := gohook.HookMethod(mux, "ServeHTTP", MyServerReq, MyServerTempReq)
 	fmt.Println(err)
 }
 
-func (h *HookServerReq) UnHook() {
+func (h *HookServer) UnHook() {
 	mux := &http.ServeMux{}
 	gohook.UnHookMethod(mux, "ServeHTTP")
 }
