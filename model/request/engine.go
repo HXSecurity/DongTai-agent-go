@@ -28,8 +28,9 @@ type HookRuleReq struct {
 36 - 方法调用数据
 */
 type UploadReq struct {
-	Type   int    `json:"type,omitempty"`
-	Detail Detail `json:"detail,omitempty"`
+	Type     int    `json:"type,omitempty"`
+	Detail   Detail `json:"detail,omitempty"`
+	InvokeId int    `json:"invoke_id"`
 }
 
 type Detail struct {
