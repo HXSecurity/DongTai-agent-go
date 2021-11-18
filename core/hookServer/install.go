@@ -16,7 +16,7 @@ type HookServer struct {
 
 func (h *HookServer) Hook() {
 	mux := &http.ServeMux{}
-	err := gohook.HookMethod(mux, "ServeHTTP", MyServerReq, MyServerTempReq)
+	err := gohook.HookMethod(mux, "ServeHTTP", MyServer, MyServerTemp)
 	fmt.Println(err)
 }
 

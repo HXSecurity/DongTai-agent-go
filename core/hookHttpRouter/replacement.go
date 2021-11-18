@@ -1,9 +1,10 @@
-package hookServer
+package hookHttpRouter
 
 import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"github.com/julienschmidt/httprouter"
 	"go-agent/global"
 	"go-agent/model/request"
 	"go-agent/utils"
@@ -14,7 +15,7 @@ import (
 	"time"
 )
 
-func MyServer(server *http.ServeMux, w http.ResponseWriter, r *http.Request) {
+func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *http.Request) {
 	id := utils.CatGoroutineID()
 	b, err := json.Marshal(r.Header)
 	if err != nil {
@@ -65,7 +66,7 @@ func MyServer(server *http.ServeMux, w http.ResponseWriter, r *http.Request) {
 	//fmt.Println("reqBody", string(s))
 	//fmt.Println("queryString", r.URL.RawQuery)
 	//utils.CatContext()
-	MyServerTemp(server, w, r)
+	MyHttpRouterServerTemp(server, w, r)
 	resH, err := json.Marshal(w.Header())
 	if err != nil {
 		fmt.Println(err)
@@ -78,7 +79,7 @@ func MyServer(server *http.ServeMux, w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func MyServerTemp(server *http.ServeMux, w http.ResponseWriter, r *http.Request) {
+func MyHttpRouterServerTemp(server *httprouter.Router, w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < 100; i++ {
 
 	}

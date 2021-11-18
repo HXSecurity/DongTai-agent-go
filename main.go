@@ -6,7 +6,6 @@ import (
 	"go-agent/global"
 	"go-agent/hook"
 	"go-agent/service"
-	"go-agent/utils"
 	"io"
 	"net/http"
 )
@@ -17,7 +16,6 @@ func init() {
 }
 
 func doRequest(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(utils.CatGoroutineID())
 	r.ParseForm() //解析url传递的参数，对于POST则解析响应包的主体（request body）
 	//fmt.Println(r.Form) //这些信息是输出到服务器端的打印信息
 	//fmt.Println("path", r.URL.Path)
