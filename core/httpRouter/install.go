@@ -1,4 +1,4 @@
-package hookHttpRouter
+package httpRouter
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	model.HookMap["hookHttpRouter"] = new(HttpRouter)
+	model.HookMap["httpRouter"] = new(HttpRouter)
 }
 
 type HttpRouter struct {

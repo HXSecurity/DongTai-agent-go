@@ -1,4 +1,4 @@
-package hookJoin
+package stringsJoin
 
 import "fmt"
 

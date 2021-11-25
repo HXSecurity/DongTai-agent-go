@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	_ "go-agent/core/hookAdd"
-	_ "go-agent/core/hookServer"
+	_ "go-agent/core/httpServeHTTP"
+	_ "go-agent/core/runtimeConcatstrings"
 	"go-agent/global"
 	"go-agent/hook"
 	"go-agent/service"
@@ -39,8 +39,8 @@ func doRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	hook.HookFunc("hookServer")
-	hook.HookFunc("hookAdd")
+	hook.HookFunc("httpServeHTTP")
+	hook.HookFunc("runtimeConcatstrings")
 	a := "2" + "3"
 	fmt.Println(a)
 	//service.PingPang()

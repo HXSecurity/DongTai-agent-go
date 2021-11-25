@@ -1,4 +1,4 @@
-package hookSprintf
+package fmtSprintf
 
 import "fmt"
 

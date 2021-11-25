@@ -1,4 +1,4 @@
-package hookSprintf
+package fmtSprintf
 
 import (
 	"fmt"
@@ -7,16 +7,16 @@ import (
 )
 
 func init() {
-	model.HookMap["hookSprintf"] = new(HookSprintf)
+	model.HookMap["fmtSprintf"] = new(FmtSprintf)
 }
 
-type HookSprintf struct {
+type FmtSprintf struct {
 }
 
-func (h *HookSprintf) Hook() {
+func (h *FmtSprintf) Hook() {
 	gohook.Hook(fmt.Sprintf, Sprintf, SprintfT)
 }
 
-func (h *HookSprintf) UnHook() {
+func (h *FmtSprintf) UnHook() {
 	gohook.UnHook(fmt.Sprintf)
 }

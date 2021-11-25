@@ -1,4 +1,4 @@
-package hookConcatstrings
+package runtimeConcatstrings
 
 import (
 	"fmt"

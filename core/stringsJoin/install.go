@@ -1,4 +1,4 @@
-package hookJoin
+package stringsJoin
 
 import (
 	"github.com/brahma-adshonor/gohook"
@@ -7,16 +7,16 @@ import (
 )
 
 func init() {
-	model.HookMap["hookJoin"] = new(HookJoin)
+	model.HookMap["stringsJoin"] = new(StringsJoin)
 }
 
-type HookJoin struct {
+type StringsJoin struct {
 }
 
-func (h *HookJoin) Hook() {
+func (h *StringsJoin) Hook() {
 	gohook.Hook(strings.Join, Join, JoinT)
 }
 
-func (h *HookJoin) UnHook() {
+func (h *StringsJoin) UnHook() {
 	gohook.UnHook(strings.Join)
 }
