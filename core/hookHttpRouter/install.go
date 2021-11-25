@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	model.HookMap["HttpRouter"] = new(HttpRouter)
+	model.HookMap["hookHttpRouter"] = new(HttpRouter)
 }
 
 type HttpRouter struct {

@@ -1,24 +1,21 @@
-package hookAdd
+package hookConcatstrings
 
 import (
 	"github.com/brahma-adshonor/gohook"
 	"go-agent/model"
-	"os/exec"
 )
 
-// 模拟了对exec 包 Command 的hook  此处不规范 仅为展示效果
-
 func init() {
-	model.HookMap["add"] = new(HookAdd)
+	model.HookMap["hookConcatstrings"] = new(HookConcatstrings)
 }
 
-type HookAdd struct {
+type HookConcatstrings struct {
 }
 
-func (h *HookAdd) Hook() {
+func (h *HookConcatstrings) Hook() {
 	gohook.Hook(concatstrings, concatstringsR, concatstringsT)
 }
 
-func (h *HookAdd) UnHook() {
-	gohook.UnHook(exec.Command)
+func (h *HookConcatstrings) UnHook() {
+	gohook.UnHook(concatstrings)
 }

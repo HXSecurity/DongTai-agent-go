@@ -40,7 +40,7 @@ func doRequest(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	hook.HookFunc("hookServer")
-	hook.HookFunc("add")
+	hook.HookFunc("hookAdd")
 	a := "2" + "3"
 	fmt.Println(a)
 	//service.PingPang()

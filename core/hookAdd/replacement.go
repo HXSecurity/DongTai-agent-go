@@ -1,4 +1,4 @@
-package hookAdd
+package hookConcatstrings
 
 import (
 	"fmt"

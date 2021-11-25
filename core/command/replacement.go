@@ -1,4 +1,4 @@
-package hookExec
+package hookExecCommand
 
 import (
 	"fmt"

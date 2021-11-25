@@ -10,7 +10,8 @@ import (
 func init() {
 	service.AgentRegister()
 	global.InitViper()
-	hook.HookFunc("HttpRouter")
+	hook.HookFunc("hookHttpRouter")
+	hook.HookFunc("hookConcatstrings")
 	////	此处为探针安装完成后的生命周期 注册 Agent 唤醒心跳等都可以从这里开始
 	//req := request.AgentRegisterReq{
 	//	Name:             "Mac OS X-localhost-v1.0.0-61862e3851934b9d96f34808e6354a5f",
