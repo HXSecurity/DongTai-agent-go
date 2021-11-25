@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	_ "go-agent/core/hookAdd"
 	_ "go-agent/core/hookServer"
 	"go-agent/global"
 	"go-agent/hook"
@@ -39,6 +40,9 @@ func doRequest(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	hook.HookFunc("hookServer")
+	hook.HookFunc("add")
+	a := "2" + "3"
+	fmt.Println(a)
 	//service.PingPang()
 	http.HandleFunc("/test", doRequest) //   设置访问路由
 	_ = http.ListenAndServe(":9090", nil)
