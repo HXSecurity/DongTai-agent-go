@@ -65,7 +65,6 @@ func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *htt
 	//fmt.Println("header", baseStr)
 	//fmt.Println("reqBody", string(s))
 	//fmt.Println("queryString", r.URL.RawQuery)
-	//utils.CatContext()
 	MyHttpRouterServerTemp(server, w, r)
 	resH, err := json.Marshal(w.Header())
 	if err != nil {
@@ -76,6 +75,7 @@ func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *htt
 	resHeader := base64.StdEncoding.EncodeToString(resH)
 	global.HookGroup[id].Detail.ResHeader = resHeader
 	global.HookGroup[id].Detail.ResBody = resBody
+	fmt.Println(global.HookGroup[id])
 	return
 }
 
