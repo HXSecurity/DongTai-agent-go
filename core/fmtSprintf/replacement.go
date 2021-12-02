@@ -1,12 +1,18 @@
 package fmtSprintf
 
-import "fmt"
+import (
+	"fmt"
+	"go-agent/utils"
+)
 
 func Sprintf(format string, a ...interface{}) string {
-	fmt.Println("hook到方法fmt.Sprintf")
-	fmt.Println("入参", format, a)
+	for _, v := range a {
+		switch v.(type) {
+		case string:
+			fmt.Println(utils.GetSource(v))
+		}
+	}
 	s := SprintfT(format, a)
-	fmt.Println("回参", s)
 	return s
 }
 

@@ -176,6 +176,7 @@ func getCurrentPath() (string, error) {
 }
 
 func PingPang() {
+	return
 	s, err := getServerInfo()
 	if err != nil {
 		return

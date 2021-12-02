@@ -1,23 +1,42 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	_ "go-agent/core/fmtSprintf"
 	_ "go-agent/core/httpServeHTTP"
-	_ "go-agent/core/runtimeConcatstrings"
+	_ "go-agent/core/ioReadAll"
+	_ "go-agent/core/jsonUnmarshal"
+	_ "go-agent/core/runtimeSlicebytetostring"
 	"go-agent/global"
 	"go-agent/hook"
 	"go-agent/service"
+	"go-agent/utils"
 	"io"
 	"net/http"
 )
+
+type Student struct {
+	Name   string `json:"name"`
+	Age    int    `json:"age"`
+	IdCard IdCard `json:"idCard"`
+}
+
+type IdCard struct {
+	CardNumber string `json:"cardNumber"`
+}
 
 func init() {
 	global.InitViper()
 	service.AgentRegister()
 }
 
+// 模拟用body接收一个json数据 嵌套结构体
+// 将它序列化到结构体
+// 其中的某些参数变化hook到具体方法
+
 func doRequest(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm() //解析url传递的参数，对于POST则解析响应包的主体（request body）
+	r.ParseForm()
 	//fmt.Println(r.Form) //这些信息是输出到服务器端的打印信息
 	//fmt.Println("path", r.URL.Path)
 	//fmt.Println("scheme", r.URL.Scheme)
@@ -25,6 +44,12 @@ func doRequest(w http.ResponseWriter, r *http.Request) {
 	//    fmt.Println("key:", k)
 	//    fmt.Println("value:", strings.Join(v, ""))
 	//}
+	b, _ := io.ReadAll(r.Body)
+	var s Student
+	json.Unmarshal(b, &s)
+	s1 := fmt.Sprintf("%s", s.Name)
+	utils.GetSource(s.Name)
+	fmt.Println(s1)
 	w.Header().Set("test", "test")
 	fmt.Fprintf(w, "service start...") //这个写入到w的是输出到客户端的 也可以用下面的 io.WriteString对象
 	//注意:如果没有调用ParseForm方法，下面无法获取表单的数据
@@ -40,13 +65,14 @@ func doRequest(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	hook.HookFunc("httpServeHTTP")
-	hook.HookFunc("runtimeConcatstrings")
-	a := "2" + "3"
-	fmt.Println(a)
+	hook.HookFunc("fmtSprintf")
+	hook.HookFunc("runtimeSlicebytetostring")
+	hook.HookFunc("ioReadAll")
+	hook.HookFunc("jsonUnmarshal")
+
 	//service.PingPang()
 	http.HandleFunc("/test", doRequest) //   设置访问路由
 	_ = http.ListenAndServe(":9090", nil)
-
 	//go func() {
 	//	fmt.Println(utils.CatGoroutineID())
 	//	//获取当前开启的go协成的唯一ID 同一个协程内部完全相同

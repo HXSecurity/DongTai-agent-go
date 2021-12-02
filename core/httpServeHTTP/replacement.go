@@ -1,13 +1,14 @@
 package httpServeHTTP
 
 import (
+	"bufio"
+	"bytes"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"go-agent/global"
 	"go-agent/model/request"
 	"go-agent/utils"
-	"io"
 	"net/http"
 	"reflect"
 	"strconv"
@@ -16,13 +17,36 @@ import (
 
 func MyServer(server *http.ServeMux, w http.ResponseWriter, r *http.Request) {
 	id := utils.CatGoroutineID()
-	b, err := json.Marshal(r.Header)
-	if err != nil {
-		fmt.Println(err)
-		return
+
+	buf := reflect.ValueOf(r.Body).
+		Elem().
+		FieldByName("src").
+		Elem().Elem().
+		FieldByName("R").
+		Elem().Elem().
+		FieldByName("buf").Bytes()
+	buf = buf[:bytes.IndexByte(buf, 0)]
+	reader := bufio.NewReader(bytes.NewReader(buf))
+	var reqArr []string
+	for {
+		line, _, err := reader.ReadLine()
+		if err != nil {
+			break
+		}
+		reqArr = append(reqArr, string(line))
 	}
-	baseStr := base64.StdEncoding.EncodeToString(b)
-	s, _ := io.ReadAll(r.Body)
+
+	header := ""
+	body := ""
+	for k, v := range reqArr {
+		if k != len(reqArr)-1 {
+			if v != "" {
+				header += v + "\n"
+			}
+		} else {
+			body = v
+		}
+	}
 	scheme := "http"
 	if r.TLS != nil {
 		scheme = "https"
@@ -44,8 +68,8 @@ func MyServer(server *http.ServeMux, w http.ResponseWriter, r *http.Request) {
 				ClientIp:      r.RemoteAddr,
 				Language:      "GO",
 				ReplayRequest: false,
-				ReqHeader:     baseStr,
-				ReqBody:       string(s),
+				ReqHeader:     header,
+				ReqBody:       body,
 				QueryString:   r.URL.RawQuery,
 				Pool:          []request.Pool{},
 			},
