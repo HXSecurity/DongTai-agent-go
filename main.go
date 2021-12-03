@@ -17,9 +17,11 @@ import (
 )
 
 type Student struct {
-	Name   string `json:"name"`
-	Age    int    `json:"age"`
-	IdCard IdCard `json:"idCard"`
+	Name   string                       `json:"name"`
+	Age    int                          `json:"age"`
+	IdCard IdCard                       `json:"idCard"`
+	Hobby  []string                     `json:"hobby"`
+	MapT   map[string]map[string]string `json:"mapT"`
 }
 
 type IdCard struct {
