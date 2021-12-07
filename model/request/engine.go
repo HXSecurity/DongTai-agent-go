@@ -1,5 +1,7 @@
 package request
 
+import "fmt"
+
 type AgentRegisterReq struct {
 	Name             string `json:"name,omitempty"`
 	Language         string `json:"language,omitempty"`
@@ -82,7 +84,7 @@ type Function struct {
 type Pool struct {
 	InvokeId         int           `json:"invokeId,omitempty"`
 	Interfaces       []interface{} `json:"interfaces,omitempty"`
-	TargetHash       []int         `json:"targetHash,omitempty"`
+	TargetHash       []string      `json:"targetHash,omitempty"`
 	TargetValues     string        `json:"targetValues,omitempty"`
 	Signature        string        `json:"signature,omitempty"`
 	OriginClassName  string        `json:"originClassName,omitempty"`
@@ -94,7 +96,7 @@ type Pool struct {
 	CallerClass      string        `json:"callerClass,omitempty"`
 	Args             string        `json:"args,omitempty"`
 	CallerMethod     string        `json:"callerMethod,omitempty"`
-	SourceHash       []int         `json:"sourceHash,omitempty"`
+	SourceHash       []string      `json:"sourceHash,omitempty"`
 	RetClassName     string        `json:"retClassName,omitempty"`
 }
 
@@ -121,4 +123,22 @@ type Parameter struct {
 	Name       string `json:"name,omitempty"`
 	Type       string `json:"type,omitempty"`
 	Annotation string `json:"annotation,omitempty"`
+}
+
+type PoolTree struct {
+	*Pool
+	Begin       bool
+	GoroutineID string
+	Children    []*PoolTree
+}
+
+func (p *PoolTree) IsThisBegin(GoroutineID string) bool {
+	return GoroutineID == p.GoroutineID && p.Begin
+}
+
+func (p *PoolTree) FMT() {
+	fmt.Println(p.Pool.SourceHash, "===>", p.Pool.TargetHash)
+	for k, _ := range p.Children {
+		p.Children[k].FMT()
+	}
 }

@@ -18,34 +18,33 @@ import (
 func MyServer(server *http.ServeMux, w http.ResponseWriter, r *http.Request) {
 	id := utils.CatGoroutineID()
 
-	buf := reflect.ValueOf(r.Body).
-		Elem().
-		FieldByName("src").
-		Elem().Elem().
-		FieldByName("R").
-		Elem().Elem().
-		FieldByName("buf").Bytes()
-	buf = buf[:bytes.IndexByte(buf, 0)]
-	reader := bufio.NewReader(bytes.NewReader(buf))
-	var reqArr []string
-	for {
-		line, _, err := reader.ReadLine()
-		if err != nil {
-			break
-		}
-		reqArr = append(reqArr, string(line))
+	t := reflect.ValueOf(r.Body)
+	b, err := json.Marshal(r.Header)
+	if err != nil {
+		fmt.Println(err)
+		return
 	}
-
-	header := ""
+	header := base64.StdEncoding.EncodeToString(b)
 	body := ""
-	for k, v := range reqArr {
-		if k != len(reqArr)-1 {
-			if v != "" {
-				header += v + "\n"
+	if t.Type().String() != "http.noBody" {
+		buf := t.
+			Elem().
+			FieldByName("src").
+			Elem().Elem().
+			FieldByName("R").
+			Elem().Elem().
+			FieldByName("buf").Bytes()
+		buf = buf[:bytes.IndexByte(buf, 0)]
+		reader := bufio.NewReader(bytes.NewReader(buf))
+		var reqArr []string
+		for {
+			line, _, err := reader.ReadLine()
+			if err != nil {
+				break
 			}
-		} else {
-			body = v
+			reqArr = append(reqArr, string(line))
 		}
+		body = reqArr[len(reqArr)-1]
 	}
 	scheme := "http"
 	if r.TLS != nil {
@@ -99,6 +98,12 @@ func MyServer(server *http.ServeMux, w http.ResponseWriter, r *http.Request) {
 	resHeader := base64.StdEncoding.EncodeToString(resH)
 	global.HookGroup[id].Detail.ResHeader = resHeader
 	global.HookGroup[id].Detail.ResBody = resBody
+	for k, _ := range global.PoolTreeMap {
+		if global.PoolTreeMap[k].IsThisBegin(id) {
+			global.PoolTreeMap[k].FMT()
+			break
+		}
+	}
 	return
 }
 

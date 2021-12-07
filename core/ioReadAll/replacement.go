@@ -5,10 +5,12 @@ import (
 	"github.com/pkg/errors"
 	"io"
 	"reflect"
+	"strconv"
 )
 
 func ReadAll(r io.Reader) ([]byte, error) {
-	fmt.Println(reflect.ValueOf(r).Pointer(), "ReadAll")
+	str := strconv.Itoa(int(reflect.ValueOf(r).Pointer()))
+	fmt.Println(str, "ReadAll")
 	b, e := ReadAllT(r)
 	fmt.Println(reflect.ValueOf(b).Pointer(), "ReadAllR")
 	return b, e

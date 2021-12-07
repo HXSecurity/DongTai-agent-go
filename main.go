@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	_ "go-agent/core/fmtSprintf"
+	_ "go-agent/core/httpRequestFormValue"
 	_ "go-agent/core/httpServeHTTP"
 	_ "go-agent/core/ioReadAll"
 	_ "go-agent/core/jsonUnmarshal"
-	_ "go-agent/core/runtimeSlicebytetostring"
+	_ "go-agent/core/runtimeConcatstrings"
 	"go-agent/global"
 	"go-agent/hook"
 	"go-agent/service"
@@ -38,6 +39,7 @@ func init() {
 // 其中的某些参数变化hook到具体方法
 
 func doRequest(w http.ResponseWriter, r *http.Request) {
+	r.FormValue("test")
 	r.ParseForm()
 	//fmt.Println(r.Form) //这些信息是输出到服务器端的打印信息
 	//fmt.Println("path", r.URL.Path)
@@ -51,7 +53,8 @@ func doRequest(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal(b, &s)
 	s1 := fmt.Sprintf("%s", s.Name)
 	utils.GetSource(s.Name)
-	fmt.Println(s1)
+	aa := "str2" + s.Name
+	fmt.Println(s1, aa)
 	w.Header().Set("test", "test")
 	fmt.Fprintf(w, "service start...") //这个写入到w的是输出到客户端的 也可以用下面的 io.WriteString对象
 	//注意:如果没有调用ParseForm方法，下面无法获取表单的数据
@@ -68,13 +71,15 @@ func doRequest(w http.ResponseWriter, r *http.Request) {
 func main() {
 	hook.HookFunc("httpServeHTTP")
 	hook.HookFunc("fmtSprintf")
-	hook.HookFunc("runtimeSlicebytetostring")
+	hook.HookFunc("runtimeConcatstrings")
 	hook.HookFunc("ioReadAll")
+	hook.HookFunc("httpRequestFormValue")
 	hook.HookFunc("jsonUnmarshal")
 
 	//service.PingPang()
 	http.HandleFunc("/test", doRequest) //   设置访问路由
 	_ = http.ListenAndServe(":9090", nil)
+
 	//go func() {
 	//	fmt.Println(utils.CatGoroutineID())
 	//	//获取当前开启的go协成的唯一ID 同一个协程内部完全相同

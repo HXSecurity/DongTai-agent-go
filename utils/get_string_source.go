@@ -67,7 +67,9 @@ func Strval(value interface{}) string {
 	return key
 }
 
-func GetSource(s interface{}) unsafe.Pointer {
+func GetSource(s interface{}) string {
 	str := Strval(s)
-	return (*(*stringStruct)(unsafe.Pointer(&str))).str
+	strPtr := uintptr((*(*stringStruct)(unsafe.Pointer(&str))).str)
+	reStr := strconv.Itoa(int(strPtr))
+	return reStr
 }

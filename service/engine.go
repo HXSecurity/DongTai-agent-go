@@ -132,25 +132,28 @@ func AgentRegister() (err error) {
 				r := regexp.MustCompile(`:::\s*(.*?)\s* `)
 				matches = r.FindAllStringSubmatch(output, -1)
 			}
-			if matches[0] != nil {
-				if matches[0][1] != "" {
-					req.ServerPort = matches[0][1]
-					req.ServerAddr = ip.String()
-					agentId, err := api.AgentRegister(req)
-					if err != nil {
-						fmt.Println(err)
+			if matches != nil {
+				if matches[0] != nil {
+					if matches[0][1] != "" {
+						req.ServerPort = matches[0][1]
+						req.ServerAddr = ip.String()
+						agentId, err := api.AgentRegister(req)
+						if err != nil {
+							fmt.Println(err)
+							break
+						}
+						global.AgentId = agentId
+						go func() {
+							for {
+								time.Sleep(1 * time.Second)
+								PingPang()
+							}
+						}()
 						break
 					}
-					global.AgentId = agentId
-					go func() {
-						for {
-							time.Sleep(1 * time.Second)
-							PingPang()
-						}
-					}()
-					break
 				}
 			}
+
 		}
 	}()
 	return nil

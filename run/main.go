@@ -1,8 +1,10 @@
 package run
 
 import (
+	_ "go-agent/core/fmtSprintf"
+	_ "go-agent/core/httpRequestFormValue"
 	_ "go-agent/core/httpRouter"
-	_ "go-agent/core/runtimeConcatstrings"
+	_ "go-agent/core/sqlDBQuery"
 	"go-agent/global"
 	"go-agent/hook"
 	"go-agent/service"
@@ -12,7 +14,9 @@ func init() {
 	service.AgentRegister()
 	global.InitViper()
 	hook.HookFunc("httpRouter")
-	hook.HookFunc("runtimeConcatstrings")
+	hook.HookFunc("sqlDBQuery")
+	hook.HookFunc("fmtSprintf")
+	hook.HookFunc("httpRequestFormValue")
 	////	此处为探针安装完成后的生命周期 注册 Agent 唤醒心跳等都可以从这里开始
 	//req := request.AgentRegisterReq{
 	//	Name:             "Mac OS X-localhost-v1.0.0-61862e3851934b9d96f34808e6354a5f",

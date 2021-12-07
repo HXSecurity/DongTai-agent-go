@@ -1,15 +1,19 @@
-package fmtSprintf
+package sqlDBQuery
 
 import (
+	"database/sql"
 	"go-agent/global"
 	"go-agent/model/request"
 	"go-agent/utils"
 )
 
-func Sprintf(format string, a ...interface{}) string {
-	var sourceHash global.HashKeys = []string{}
+func Query(db *sql.DB, query string, args ...interface{}) (*sql.Rows, error) {
+
+	rows, sql := QueryT(db, query, args)
+
+	var sourceHash global.HashKeys = []string{utils.GetSource(query)}
 	var sourceBytes = []byte("")
-	for _, v := range a {
+	for _, v := range args {
 		switch v.(type) {
 		case string:
 			sourceHash = append(sourceHash, utils.GetSource(v))
@@ -18,13 +22,14 @@ func Sprintf(format string, a ...interface{}) string {
 			sourceBytes = append(sourceBytes, str1...)
 		}
 	}
-	s := SprintfT(format, a...)
-	var targetHash global.HashKeys = []string{utils.GetSource(s)}
+
+	var targetHash global.HashKeys = []string{}
 	var pool = request.Pool{
 		SourceValues: string(sourceBytes),
 		SourceHash:   sourceHash,
 		TargetHash:   targetHash,
 	}
+
 	poolTree := request.PoolTree{
 		Begin:       false,
 		Pool:        &pool,
@@ -37,10 +42,12 @@ func Sprintf(format string, a ...interface{}) string {
 			break
 		}
 	}
+
 	global.PoolTreeMap[&targetHash] = &poolTree
-	return s
+
+	return rows, sql
 }
 
-func SprintfT(format string, a ...interface{}) string {
-	return ""
+func QueryT(db *sql.DB, query string, args ...interface{}) (*sql.Rows, error) {
+	return nil, nil
 }
