@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
+	"go-agent/api"
 	"go-agent/global"
 	"go-agent/model/request"
 	"go-agent/utils"
@@ -101,10 +102,12 @@ func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *htt
 	global.HookGroup[id].Detail.ResBody = resBody
 	for k, _ := range global.PoolTreeMap {
 		if global.PoolTreeMap[k].IsThisBegin(id) {
-			global.PoolTreeMap[k].FMT()
+			onlyKey += 1
+			global.PoolTreeMap[k].FMT(&global.HookGroup[id].Detail.Function.Pool, onlyKey)
 			break
 		}
 	}
+	api.ReportUpload(*global.HookGroup[id])
 	return
 }
 

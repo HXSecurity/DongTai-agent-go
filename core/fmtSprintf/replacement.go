@@ -7,24 +7,38 @@ import (
 )
 
 func Sprintf(format string, a ...interface{}) string {
+	signature, callerClass, callerMethod, callerLineNumber := utils.FmtStack()
 	var sourceHash global.HashKeys = []string{}
-	var sourceBytes = []byte("")
+	var SourceValues string = ""
 	for _, v := range a {
 		switch v.(type) {
 		case string:
 			sourceHash = append(sourceHash, utils.GetSource(v))
-			space := []byte(" ")
-			str1 := append([]byte(v.(string)), space...)
-			sourceBytes = append(sourceBytes, str1...)
+			SourceValues += utils.StringAdd(v.(string), " ")
 		}
 	}
 	s := SprintfT(format, a...)
+
 	var targetHash global.HashKeys = []string{utils.GetSource(s)}
+
 	var pool = request.Pool{
-		SourceValues: string(sourceBytes),
-		SourceHash:   sourceHash,
-		TargetHash:   targetHash,
+		Source:           false,
+		Interfaces:       []interface{}{},
+		SourceValues:     SourceValues,
+		SourceHash:       sourceHash,
+		TargetValues:     s,
+		TargetHash:       targetHash,
+		Signature:        signature,
+		OriginClassName:  "fmt",
+		MethodName:       "Sprintf",
+		ClassName:        "fmt",
+		CallerLineNumber: callerLineNumber,
+		CallerClass:      callerClass,
+		CallerMethod:     callerMethod,
+		RetClassName:     "string",
+		Args:             utils.Strval(a),
 	}
+
 	poolTree := request.PoolTree{
 		Begin:       false,
 		Pool:        &pool,

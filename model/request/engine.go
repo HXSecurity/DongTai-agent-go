@@ -3,23 +3,23 @@ package request
 import "fmt"
 
 type AgentRegisterReq struct {
-	Name             string `json:"name,omitempty"`
-	Language         string `json:"language,omitempty"`
-	Version          string `json:"version,omitempty"`
-	ProjectName      string `json:"projectName,omitempty"`
-	Hostname         string `json:"hostname,omitempty"`
-	Network          string `json:"network,omitempty"`
-	ContainerName    string `json:"container_name,omitempty"`
-	ContainerVersion string `json:"container_version,omitempty"`
-	ServerAddr       string `json:"serverAddr,omitempty"`
-	ServerPort       string `json:"serverPort,omitempty"`
-	ServerPath       string `json:"serverPath,omitempty"`
-	ServerEnv        string `json:"serverEnv,omitempty"`
-	Pid              string `json:"pid,omitempty"`
+	Name             string `json:"name"`
+	Language         string `json:"language"`
+	Version          string `json:"version"`
+	ProjectName      string `json:"projectName"`
+	Hostname         string `json:"hostname"`
+	Network          string `json:"network"`
+	ContainerName    string `json:"container_name"`
+	ContainerVersion string `json:"container_version"`
+	ServerAddr       string `json:"serverAddr"`
+	ServerPort       string `json:"serverPort"`
+	ServerPath       string `json:"serverPath"`
+	ServerEnv        string `json:"serverEnv"`
+	Pid              string `json:"pid"`
 }
 
 type HookRuleReq struct {
-	Language string `json:"language,omitempty"`
+	Language string `json:"language"`
 }
 
 // UploadReq
@@ -30,8 +30,8 @@ type HookRuleReq struct {
 36 - 方法调用数据
 */
 type UploadReq struct {
-	Type     int    `json:"type,omitempty"`
-	Detail   Detail `json:"detail,omitempty"`
+	Type     int    `json:"type"`
+	Detail   Detail `json:"detail"`
 	InvokeId int    `json:"invoke_id"`
 }
 
@@ -46,9 +46,9 @@ type Detail struct {
 }
 
 type Pant struct {
-	Disk        string `json:"disk,omitempty"`
-	Memory      string `json:"memory,omitempty"`
-	Cpu         string `json:"cpu,omitempty"`
+	Disk        string `json:"disk"`
+	Memory      string `json:"memory"`
+	Cpu         string `json:"cpu"`
 	MethodQueue int    `json:"methodQueue"`
 	ReplayQueue int    `json:"replayQueue"`
 	ReqCount    int    `json:"reqCount"`
@@ -56,73 +56,73 @@ type Pant struct {
 }
 
 type Component struct {
-	PackagePath      string `json:"packagePath,omitempty"`
-	PackageSignature string `json:"packageSignature,omitempty"`
-	PackageName      string `json:"packageName,omitempty"`
-	PackageAlgorithm string `json:"packageAlgorithm,omitempty"`
+	PackagePath      string `json:"packagePath"`
+	PackageSignature string `json:"packageSignature"`
+	PackageName      string `json:"packageName"`
+	PackageAlgorithm string `json:"packageAlgorithm"`
 }
 
 type Function struct {
-	Uri           string `json:"uri,omitempty"`
-	Url           string `json:"url,omitempty"`
-	Protocol      string `json:"protocol,omitempty"`
-	ContextPath   string `json:"contextPath,omitempty"`
-	Pool          []Pool `json:"pool,omitempty"`
-	Language      string `json:"language,omitempty"`
-	ClientIp      string `json:"clientIp,omitempty"`
-	Secure        bool   `json:"secure,omitempty"`
-	QueryString   string `json:"queryString,omitempty"`
-	ReplayRequest bool   `json:"replayRequest,omitempty"`
-	Method        string `json:"method,omitempty"`
-	ReqHeader     string `json:"reqHeader,omitempty"`
-	ReqBody       string `json:"reqBody,omitempty"`
-	ResBody       string `json:"resBody,omitempty"`
-	Scheme        string `json:"scheme,omitempty"`
-	ResHeader     string `json:"resHeader,omitempty"`
+	Uri           string `json:"uri"`
+	Url           string `json:"url"`
+	Protocol      string `json:"protocol"`
+	ContextPath   string `json:"contextPath"`
+	Pool          []Pool `json:"pool"`
+	Language      string `json:"language"`
+	ClientIp      string `json:"clientIp"`
+	Secure        bool   `json:"secure"`
+	QueryString   string `json:"queryString"`
+	ReplayRequest bool   `json:"replayRequest"`
+	Method        string `json:"method"`
+	ReqHeader     string `json:"reqHeader"`
+	ReqBody       string `json:"reqBody"`
+	ResBody       string `json:"resBody"`
+	Scheme        string `json:"scheme"`
+	ResHeader     string `json:"resHeader"`
 }
 
 type Pool struct {
-	InvokeId         int           `json:"invokeId,omitempty"`
-	Interfaces       []interface{} `json:"interfaces,omitempty"`
-	TargetHash       []string      `json:"targetHash,omitempty"`
-	TargetValues     string        `json:"targetValues,omitempty"`
-	Signature        string        `json:"signature,omitempty"`
-	OriginClassName  string        `json:"originClassName,omitempty"`
-	SourceValues     string        `json:"sourceValues,omitempty"`
-	MethodName       string        `json:"methodName,omitempty"`
-	ClassName        string        `json:"className,omitempty"`
-	Source           bool          `json:"source,omitempty"`
-	CallerLineNumber int           `json:"callerLineNumber,omitempty"`
-	CallerClass      string        `json:"callerClass,omitempty"`
-	Args             string        `json:"args,omitempty"`
-	CallerMethod     string        `json:"callerMethod,omitempty"`
-	SourceHash       []string      `json:"sourceHash,omitempty"`
-	RetClassName     string        `json:"retClassName,omitempty"`
+	InvokeId         int           `json:"invokeId"`
+	Interfaces       []interface{} `json:"interfaces"`
+	TargetHash       []string      `json:"targetHash"`
+	TargetValues     string        `json:"targetValues"`
+	Signature        string        `json:"signature"`
+	OriginClassName  string        `json:"originClassName"`
+	SourceValues     string        `json:"sourceValues"`
+	MethodName       string        `json:"methodName"`
+	ClassName        string        `json:"className"`
+	Source           bool          `json:"source"`
+	CallerLineNumber int           `json:"callerLineNumber"`
+	CallerClass      string        `json:"callerClass"`
+	Args             string        `json:"args"`
+	CallerMethod     string        `json:"callerMethod"`
+	SourceHash       []string      `json:"sourceHash"`
+	RetClassName     string        `json:"retClassName"`
 }
 
 type Log struct {
-	Log string `json:"log,omitempty"`
+	Log string `json:"log"`
 }
 
 type Api struct {
-	ApiData []ApiData `json:"apiData,omitempty"`
+	ApiData []ApiData `json:"apiData"`
 }
 
 type ApiData struct {
-	Uri         string      `json:"uri,omitempty"`
-	Method      []string    `json:"method,omitempty"`
-	Class       string      `json:"class,omitempty"`
-	Parameters  []Parameter `json:"parameters,omitempty"`
-	ReturnType  string      `json:"returnType,omitempty"`
-	File        string      `json:"file,omitempty"`
-	Controller  string      `json:"controller,omitempty"`
-	Description string      `json:"description,omitempty"`
+	Uri         string      `json:"uri"`
+	Method      []string    `json:"method"`
+	Class       string      `json:"class"`
+	Parameters  []Parameter `json:"parameters"`
+	ReturnType  string      `json:"returnType"`
+	File        string      `json:"file"`
+	Controller  string      `json:"controller"`
+	Description string      `json:"description"`
 }
 
 type Parameter struct {
-	Name       string `json:"name,omitempty"`
-	Type       string `json:"type,omitempty"`
-	Annotation string `json:"annotation,omitempty"`
+	Name       string `json:"name"`
+	Type       string `json:"type"`
+	Annotation string `json:"annotation"`
 }
 
 type PoolTree struct {
@@ -136,9 +136,12 @@ func (p *PoolTree) IsThisBegin(GoroutineID string) bool {
 	return GoroutineID == p.GoroutineID && p.Begin
 }
 
-func (p *PoolTree) FMT() {
+func (p *PoolTree) FMT(pools *[]Pool, onlyKey int) {
+	p.Pool.InvokeId = onlyKey
+	*pools = append(*pools, *p.Pool)
 	fmt.Println(p.Pool.SourceHash, "===>", p.Pool.TargetHash)
 	for k, _ := range p.Children {
-		p.Children[k].FMT()
+		onlyKey += 1
+		p.Children[k].FMT(pools, onlyKey)
 	}
 }

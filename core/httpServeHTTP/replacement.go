@@ -100,7 +100,8 @@ func MyServer(server *http.ServeMux, w http.ResponseWriter, r *http.Request) {
 	global.HookGroup[id].Detail.ResBody = resBody
 	for k, _ := range global.PoolTreeMap {
 		if global.PoolTreeMap[k].IsThisBegin(id) {
-			global.PoolTreeMap[k].FMT()
+			onlyKey += 1
+			global.PoolTreeMap[k].FMT(&global.HookGroup[id].Detail.Function.Pool, onlyKey)
 			break
 		}
 	}

@@ -8,26 +8,37 @@ import (
 )
 
 func Query(db *sql.DB, query string, args ...interface{}) (*sql.Rows, error) {
-
+	signature, callerClass, callerMethod, callerLineNumber := utils.FmtStack()
 	rows, sql := QueryT(db, query, args)
-
 	var sourceHash global.HashKeys = []string{utils.GetSource(query)}
-	var sourceBytes = []byte("")
+	var SourceValues string = "query"
+	var ARGS = utils.StringAdd(utils.Strval(query), ",", utils.Strval(args))
 	for _, v := range args {
 		switch v.(type) {
 		case string:
 			sourceHash = append(sourceHash, utils.GetSource(v))
-			space := []byte(" ")
-			str1 := append([]byte(v.(string)), space...)
-			sourceBytes = append(sourceBytes, str1...)
+			SourceValues += utils.StringAdd(v.(string), " ")
 		}
 	}
 
 	var targetHash global.HashKeys = []string{}
+
 	var pool = request.Pool{
-		SourceValues: string(sourceBytes),
-		SourceHash:   sourceHash,
-		TargetHash:   targetHash,
+		Source:           false,
+		Interfaces:       []interface{}{},
+		SourceValues:     SourceValues,
+		SourceHash:       sourceHash,
+		TargetValues:     "",
+		TargetHash:       targetHash,
+		Signature:        signature,
+		OriginClassName:  "sql.(*DB)",
+		MethodName:       "Query",
+		ClassName:        "sql.(*DB)",
+		CallerLineNumber: callerLineNumber,
+		CallerClass:      callerClass,
+		CallerMethod:     callerMethod,
+		Args:             ARGS,
+		RetClassName:     "*sql.Rows, error",
 	}
 
 	poolTree := request.PoolTree{
