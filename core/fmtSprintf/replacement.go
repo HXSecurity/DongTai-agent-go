@@ -45,13 +45,14 @@ func Sprintf(format string, a ...interface{}) string {
 		Children:    []*request.PoolTree{},
 		GoroutineID: utils.CatGoroutineID(),
 	}
-	for k, _ := range global.PoolTreeMap {
-		if k.Some(sourceHash) {
-			global.PoolTreeMap[k].Children = append(global.PoolTreeMap[k].Children, &poolTree)
-			break
+	global.PoolTreeMap.Range(func(key, value interface{}) bool {
+		if key.(*global.HashKeys).Some(sourceHash) {
+			value.(*request.PoolTree).Children = append(value.(*request.PoolTree).Children, &poolTree)
+			return false
 		}
-	}
-	global.PoolTreeMap[&targetHash] = &poolTree
+		return true
+	})
+	global.PoolTreeMap.Store(&targetHash, &poolTree)
 	return s
 }
 

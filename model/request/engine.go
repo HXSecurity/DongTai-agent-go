@@ -136,12 +136,13 @@ func (p *PoolTree) IsThisBegin(GoroutineID string) bool {
 	return GoroutineID == p.GoroutineID && p.Begin
 }
 
-func (p *PoolTree) FMT(pools *[]Pool, onlyKey int) {
+func (p *PoolTree) FMT(pools *[]Pool, onlyKey int, goroutineIDs map[string]bool) {
 	p.Pool.InvokeId = onlyKey
 	*pools = append(*pools, *p.Pool)
+	goroutineIDs[p.GoroutineID] = true
 	fmt.Println(p.Pool.SourceHash, "===>", p.Pool.TargetHash)
 	for k, _ := range p.Children {
 		onlyKey += 1
-		p.Children[k].FMT(pools, onlyKey)
+		p.Children[k].FMT(pools, onlyKey, goroutineIDs)
 	}
 }

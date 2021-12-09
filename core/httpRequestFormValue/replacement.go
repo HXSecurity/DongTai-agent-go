@@ -36,7 +36,7 @@ func FormValue(req *http.Request, key string) string {
 		Children:    []*request.PoolTree{},
 		GoroutineID: id,
 	}
-	global.PoolTreeMap[&targetHash] = &poolTree
+	global.PoolTreeMap.Store(&targetHash, &poolTree)
 	return r
 }
 

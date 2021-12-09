@@ -1,6 +1,9 @@
 package global
 
-import "go-agent/model/request"
+import (
+	"go-agent/model/request"
+	"sync"
+)
 
 type HashKeys []string
 
@@ -18,5 +21,6 @@ func (h *HashKeys) Some(source []string) bool {
 var (
 	AgentId     = 0
 	HookGroup   = make(map[string]*request.UploadReq)
-	PoolTreeMap = make(map[*HashKeys]*request.PoolTree)
+	PoolTreeMap = sync.Map{}
+	//PoolTreeMap = make(map[*HashKeys]*request.PoolTree)
 )

@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"go-agent/api"
 	"go-agent/global"
 	"go-agent/model/request"
 	"go-agent/utils"
@@ -98,13 +99,17 @@ func MyServer(server *http.ServeMux, w http.ResponseWriter, r *http.Request) {
 	resHeader := base64.StdEncoding.EncodeToString(resH)
 	global.HookGroup[id].Detail.ResHeader = resHeader
 	global.HookGroup[id].Detail.ResBody = resBody
-	for k, _ := range global.PoolTreeMap {
-		if global.PoolTreeMap[k].IsThisBegin(id) {
+	goroutineIDs := make(map[string]bool)
+	global.PoolTreeMap.Range(func(key, value interface{}) bool {
+		if value.(*request.PoolTree).IsThisBegin(id) {
 			onlyKey += 1
-			global.PoolTreeMap[k].FMT(&global.HookGroup[id].Detail.Function.Pool, onlyKey)
-			break
+			value.(*request.PoolTree).FMT(&global.HookGroup[id].Detail.Function.Pool, onlyKey, goroutineIDs)
+			return false
 		}
-	}
+		return true
+	})
+	api.ReportUpload(*global.HookGroup[id])
+	utils.RunMapGCbYGoroutineID(goroutineIDs)
 	return
 }
 

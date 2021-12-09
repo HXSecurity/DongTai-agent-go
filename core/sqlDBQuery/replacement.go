@@ -8,8 +8,8 @@ import (
 )
 
 func Query(db *sql.DB, query string, args ...interface{}) (*sql.Rows, error) {
-	signature, callerClass, callerMethod, callerLineNumber := utils.FmtStack()
 	rows, sql := QueryT(db, query, args)
+	signature, callerClass, callerMethod, callerLineNumber := utils.FmtStack()
 	var sourceHash global.HashKeys = []string{utils.GetSource(query)}
 	var SourceValues string = "query"
 	var ARGS = utils.StringAdd(utils.Strval(query), ",", utils.Strval(args))
@@ -47,14 +47,14 @@ func Query(db *sql.DB, query string, args ...interface{}) (*sql.Rows, error) {
 		Children:    []*request.PoolTree{},
 		GoroutineID: utils.CatGoroutineID(),
 	}
-	for k, _ := range global.PoolTreeMap {
-		if k.Some(sourceHash) {
-			global.PoolTreeMap[k].Children = append(global.PoolTreeMap[k].Children, &poolTree)
-			break
+	global.PoolTreeMap.Range(func(key, value interface{}) bool {
+		if key.(*global.HashKeys).Some(sourceHash) {
+			value.(*request.PoolTree).Children = append(value.(*request.PoolTree).Children, &poolTree)
+			return false
 		}
-	}
-
-	global.PoolTreeMap[&targetHash] = &poolTree
+		return true
+	})
+	global.PoolTreeMap.Store(&targetHash, &poolTree)
 
 	return rows, sql
 }
