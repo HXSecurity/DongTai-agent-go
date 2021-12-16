@@ -104,7 +104,7 @@ func MyServer(server *http.ServeMux, w http.ResponseWriter, r *http.Request) {
 		if value.(*request.PoolTree).IsThisBegin(id) {
 			onlyKey += 1
 			value.(*request.PoolTree).FMT(&global.HookGroup[id].Detail.Function.Pool, onlyKey, goroutineIDs)
-			return false
+			return true
 		}
 		return true
 	})

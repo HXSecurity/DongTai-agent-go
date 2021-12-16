@@ -100,6 +100,15 @@ type Pool struct {
 	RetClassName     string        `json:"retClassName"`
 }
 
+type PoolReq struct {
+	Source          bool
+	OriginClassName string
+	MethodName      string
+	ClassName       string
+	Args            []interface{}
+	Reqs            []interface{}
+}
+
 type Log struct {
 	Log string `json:"log"`
 }

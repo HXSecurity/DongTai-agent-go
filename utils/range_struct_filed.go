@@ -1,38 +1,42 @@
 package utils
 
 import (
-	"fmt"
 	"reflect"
 )
 
-func RangeSource(i interface{}) {
+func RangeSource(i interface{}, needHook *[]interface{}) {
 	t := reflect.TypeOf(i)
 	v := reflect.ValueOf(i)
-
+	if !v.IsValid() {
+		return
+	}
 	if t.Kind() == reflect.Ptr {
+		if v.IsNil() {
+			return
+		}
 		t = t.Elem()
 		v = v.Elem()
 		in := v.Interface()
-		RangeSource(in)
+		RangeSource(in, needHook)
 		return
 	}
 	if t.Kind() == reflect.Struct {
-		RangeStructFiled(i)
+		RangeStructFiled(i, needHook)
 		return
 	}
 
 	if t.Kind() == reflect.Slice {
-		RangeStructSlice(i)
+		RangeStructSlice(i, needHook)
 		return
 	}
 
 	if t.Kind() == reflect.Map {
-		RangeStructMap(i)
+		RangeStructMap(i, needHook)
 		return
 	}
 }
 
-func RangeStructFiled(i interface{}) {
+func RangeStructFiled(i interface{}, needHook *[]interface{}) {
 	t := reflect.TypeOf(i)
 	var v reflect.Value
 	var value reflect.Value
@@ -44,54 +48,77 @@ func RangeStructFiled(i interface{}) {
 			value = v.FieldByName(k)
 		}
 		if v.Kind() == reflect.Ptr {
+			if v.IsNil() {
+				continue
+			}
 			value = v.Elem().FieldByName(k)
 		}
-		ty := value.Type()
 		if value.Kind() != reflect.Struct && value.Kind() != reflect.Ptr {
-			fmt.Println(k, value, ty, value.Kind())
 			if value.Kind() == reflect.String {
-				fmt.Println(GetSource(value.Interface()))
+				*needHook = append(*needHook, value.String())
 			}
 		}
 		if value.Kind() == reflect.Struct || value.Kind() == reflect.Ptr || value.Kind() == reflect.Slice || value.Kind() == reflect.Map {
-			RangeSource(value.Interface())
+			if value.Kind() == reflect.Ptr && value.IsNil() {
+				continue
+			}
+			RangeSource(value.Interface(), needHook)
 		}
 	}
 }
 
-func RangeStructSlice(i interface{}) {
+func RangeStructSlice(i interface{}, needHook *[]interface{}) {
 	v := reflect.ValueOf(i)
 	for sl := 0; sl < v.Len(); sl++ {
 		if v.Index(sl).Kind() == reflect.String {
 			value := v.Index(sl)
-			Type := v.Index(sl).Kind()
-			pointer := GetSource(value.Interface())
-			fmt.Println(value, Type, pointer)
+			*needHook = append(*needHook, value.String())
 		}
+		if v.Index(sl).Kind() == reflect.Interface {
+			value := v.Index(sl)
+			switch value.Interface().(type) {
+			case string:
+				*needHook = append(*needHook, value.Interface())
+				break
+			default:
+				RangeSource(value.Interface(), needHook)
+				break
+			}
+		}
+
 		if v.Index(sl).Kind() == reflect.Struct || v.Index(sl).Kind() == reflect.Ptr || v.Index(sl).Kind() == reflect.Slice || v.Index(sl).Kind() == reflect.Map {
-			RangeSource(v.Index(sl).Interface())
+			if v.Index(sl).Kind() == reflect.Ptr && v.Index(sl).IsNil() {
+				continue
+			}
+			RangeSource(v.Index(sl).Interface(), needHook)
 		}
 	}
 }
 
-func RangeStructMap(i interface{}) {
+func RangeStructMap(i interface{}, needHook *[]interface{}) {
 	v := reflect.ValueOf(i)
 	for _, key := range v.MapKeys() {
 		value := v.MapIndex(key)
 		if key.Kind() == reflect.String {
-			fmt.Println("map", "key", GetSource(key.Interface()))
+			*needHook = append(*needHook, value.String())
 		}
 
 		if value.Kind() == reflect.String {
-			fmt.Println("map", "value", GetSource(value.Interface()))
+			*needHook = append(*needHook, value.String())
 		}
 
 		if key.Kind() == reflect.Struct || key.Kind() == reflect.Ptr || key.Kind() == reflect.Slice || key.Kind() == reflect.Map {
-			RangeSource(key.Interface())
+			if value.Kind() == reflect.Ptr && value.IsNil() {
+				continue
+			}
+			RangeSource(key.Interface(), needHook)
 		}
 
 		if value.Kind() == reflect.Struct || value.Kind() == reflect.Ptr || value.Kind() == reflect.Slice || value.Kind() == reflect.Map {
-			RangeSource(value.Interface())
+			if value.Kind() == reflect.Ptr && value.IsNil() {
+				continue
+			}
+			RangeSource(value.Interface(), needHook)
 		}
 	}
 }

@@ -7,9 +7,9 @@ import (
 	"strings"
 )
 
-const signatureLine = 4
-const callLine = 6
-const callFileLine = 7
+const signatureLine = 6
+const callLine = 8
+const callFileLine = 9
 
 func FmtStack() (signature string, callerClass string, callerMethod string, callerLineNumber int) {
 	l := 1 << 10
