@@ -21,7 +21,7 @@ func FmtHookPool(p request.PoolReq) {
 		switch v.(type) {
 		case string:
 			sourceHash = append(sourceHash, GetSource(v))
-			SourceValues += StringAdd(v.(string), " ")
+			SourceValues = StringAdd(SourceValues, v.(string), " ")
 		}
 	}
 	var targetHash global.HashKeys
@@ -32,14 +32,14 @@ func FmtHookPool(p request.PoolReq) {
 	RangeSource(p.Reqs, &NeedCatch)
 	for _, v := range p.Reqs {
 		if reflect.ValueOf(v).IsValid() {
-			RetClassNames += StringAdd(reflect.ValueOf(v).Type().String(), " ")
+			RetClassNames = StringAdd(RetClassNames, reflect.ValueOf(v).Type().String(), " ")
 		}
 	}
 	for _, v := range NeedCatch {
 		switch v.(type) {
 		case string:
 			targetHash = append(targetHash, GetSource(v))
-			targetValues += StringAdd(v.(string), " ")
+			StringAdd(targetValues, v.(string), " ")
 		}
 	}
 

@@ -52,7 +52,14 @@ func doRequest(w http.ResponseWriter, r *http.Request) {
 	var s Student
 	json.Unmarshal(b, &s)
 	s1 := fmt.Sprintf("%s", s.Name)
-	utils.GetSource(s.Name)
+	fmt.Println(utils.GetSource(s.Name))
+	fmt.Println(utils.GetSource(s.Name), "enter")
+	m := make(map[string]string)
+	m[s.Name] = s.Name
+	for k, v := range m {
+		fmt.Println(utils.GetSource(k), "key")
+		fmt.Println(utils.GetSource(v), "value")
+	}
 	aa := "str2" + s.Name
 	fmt.Println(s1, aa)
 	w.Header().Set("test", "test")

@@ -43,6 +43,9 @@ func RangeStructFiled(i interface{}, needHook *[]interface{}) {
 	v = reflect.ValueOf(i)
 	fieldNum := t.NumField()
 	for i := 0; i < fieldNum; i++ {
+		if !t.Field(i).IsExported() {
+			continue
+		}
 		k := t.Field(i).Name
 		if v.Kind() == reflect.Struct {
 			value = v.FieldByName(k)
@@ -55,14 +58,16 @@ func RangeStructFiled(i interface{}, needHook *[]interface{}) {
 		}
 		if value.Kind() != reflect.Struct && value.Kind() != reflect.Ptr {
 			if value.Kind() == reflect.String {
-				*needHook = append(*needHook, value.String())
+				*needHook = append(*needHook, value.Interface())
 			}
 		}
 		if value.Kind() == reflect.Struct || value.Kind() == reflect.Ptr || value.Kind() == reflect.Slice || value.Kind() == reflect.Map {
-			if value.Kind() == reflect.Ptr && value.IsNil() {
-				continue
+			if value.IsValid() {
+				if value.Kind() == reflect.Ptr {
+					continue
+				}
+				RangeSource(value.Interface(), needHook)
 			}
-			RangeSource(value.Interface(), needHook)
 		}
 	}
 }
@@ -72,7 +77,7 @@ func RangeStructSlice(i interface{}, needHook *[]interface{}) {
 	for sl := 0; sl < v.Len(); sl++ {
 		if v.Index(sl).Kind() == reflect.String {
 			value := v.Index(sl)
-			*needHook = append(*needHook, value.String())
+			*needHook = append(*needHook, value.Interface())
 		}
 		if v.Index(sl).Kind() == reflect.Interface {
 			value := v.Index(sl)
@@ -100,11 +105,11 @@ func RangeStructMap(i interface{}, needHook *[]interface{}) {
 	for _, key := range v.MapKeys() {
 		value := v.MapIndex(key)
 		if key.Kind() == reflect.String {
-			*needHook = append(*needHook, value.String())
+			*needHook = append(*needHook, value.Interface())
 		}
 
 		if value.Kind() == reflect.String {
-			*needHook = append(*needHook, value.String())
+			*needHook = append(*needHook, value.Interface())
 		}
 
 		if key.Kind() == reflect.Struct || key.Kind() == reflect.Ptr || key.Kind() == reflect.Slice || key.Kind() == reflect.Map {
