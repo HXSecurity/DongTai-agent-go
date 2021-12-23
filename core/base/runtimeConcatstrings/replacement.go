@@ -15,12 +15,21 @@ func concatstrings(buf *tmpBuf, a []string) string
 
 func concatstringsR(buf *tmpBuf, a []string) string {
 	e := concatstringsT(buf, a)
-	if utils.IsHook("reflect.(*rtype).ptrTo", 6) {
-		return e
+	var ArgStr = "["
+	for k, v := range a {
+		ArgStr = utils.StringAdd(ArgStr, v)
+		if k != len(a)-1 {
+			ArgStr = utils.StringAdd(ArgStr, ",")
+		} else {
+			ArgStr = utils.StringAdd(ArgStr, "]")
+		}
 	}
 	utils.FmtHookPool(request.PoolReq{
 		Args:            utils.Collect(a),
+		ArgsStr:         ArgStr,
 		Reqs:            utils.Collect(e),
+		NeedHook:        utils.Collect(a),
+		NeedCatch:       utils.Collect(e),
 		Source:          false,
 		OriginClassName: "runtime",
 		MethodName:      "concatstrings",

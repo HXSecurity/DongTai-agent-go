@@ -7,12 +7,13 @@ import (
 )
 
 func WriteString(b *bytes.Buffer, s string) (n int, err error) {
-	// 存在问题 未完工 TODO
 	argStr := b.String()
 	n, err = WriteStringT(b, s)
 	utils.FmtHookPool(request.PoolReq{
 		Args:            utils.Collect(argStr, s),
 		Reqs:            utils.Collect(b.String()),
+		NeedHook:        utils.Collect(argStr, s),
+		NeedCatch:       utils.Collect(b.String()),
 		Source:          false,
 		OriginClassName: "bytes.(*Buffer)",
 		MethodName:      "WriteString",

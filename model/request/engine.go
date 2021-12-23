@@ -107,6 +107,9 @@ type PoolReq struct {
 	ClassName       string
 	Args            []interface{}
 	Reqs            []interface{}
+	NeedHook        []interface{}
+	NeedCatch       []interface{}
+	ArgsStr         string
 }
 
 type Log struct {

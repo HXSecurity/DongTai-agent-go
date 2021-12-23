@@ -3,12 +3,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	_ "go-agent/core/fmtSprintf"
-	_ "go-agent/core/httpRequestFormValue"
-	_ "go-agent/core/httpServeHTTP"
-	_ "go-agent/core/ioReadAll"
-	_ "go-agent/core/jsonUnmarshal"
-	_ "go-agent/core/runtimeConcatstrings"
+	_ "go-agent/core/base/fmtSprintf"
+	_ "go-agent/core/base/httpRequestFormValue"
+	_ "go-agent/core/base/httpServeHTTP"
+	_ "go-agent/core/base/ioReadAll"
+	_ "go-agent/core/base/jsonUnmarshal"
+	_ "go-agent/core/base/runtimeConcatstrings"
 	"go-agent/global"
 	"go-agent/hook"
 	"go-agent/service"
@@ -86,55 +86,4 @@ func main() {
 	//service.PingPang()
 	http.HandleFunc("/test", doRequest) //   设置访问路由
 	_ = http.ListenAndServe(":9090", nil)
-
-	//go func() {
-	//	fmt.Println(utils.CatGoroutineID())
-	//	//获取当前开启的go协成的唯一ID 同一个协程内部完全相同
-	//}()
-	//go func() {
-	//	fmt.Println(utils.CatGoroutineID())
-	//	go func() {
-	//		fmt.Println(utils.CatGoroutineID())
-	//
-	//	}()
-	//	//获取当前开启的go协成的唯一ID 同一个协程内部完全相同
-	//
-	//}()
-	//go func() {
-	//	fmt.Println(utils.CatGoroutineID())
-	//
-	//	//获取当前开启的go协成的唯一ID 同一个协程内部完全相同
-	//
-	//}()
-	//go func() {
-	//	fmt.Println(utils.CatGoroutineID())
-	//
-	//	//获取当前开启的go协成的唯一ID 同一个协程内部完全相同
-	//}()
-	//fmt.Println(utils.CatGoroutineID())
-	//// 上述四个为测试携程 最后为主携程
-	//for {
-	//
-	//}
-	//// 此处模拟的接口调用后 对hook map中的声明过的hook进行Hook 和 Unhook 用户不会执行到main 但是引入包必然会触发init 的生命周期
-	//hook.HookFunc("http")
-	//hook.HookFunc("exec")
-	//
-	//c:= new(http.Client)
-	//c.Get("https://www.baidu.com")
-	//此处的原生http已被自己开发的http get接口方法捕捉
-	//exec.Command("ls")
-	//此处的原生Command已被自己开发的Command接口方法捕捉
-	//// 注销方法
-	//
-	//hook.UnHookFunc("http")
-	// 卸载捕获
-	//hook.UnHookFunc("exec")
-	// 卸载捕获
-	//
-	//
-	//c.Get("https://www.baidu123.com")
-	// 已经恢复到原生
-	//
-	//exec.Command("clear")
 }

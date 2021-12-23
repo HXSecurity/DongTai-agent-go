@@ -14,10 +14,10 @@ func FmtHookPool(p request.PoolReq) {
 	signature, callerClass, callerMethod, callerLineNumber := FmtStack()
 	var sourceHash global.HashKeys
 	var SourceValues string = ""
-
-	var NeedHook []interface{}
-	RangeSource(p.Args, &NeedHook)
-	for _, v := range NeedHook {
+	if len(p.NeedHook) == 0 {
+		RangeSource(p.Args, &p.NeedHook)
+	}
+	for _, v := range p.NeedHook {
 		switch v.(type) {
 		case string:
 			sourceHash = append(sourceHash, GetSource(v))
@@ -27,22 +27,27 @@ func FmtHookPool(p request.PoolReq) {
 	var targetHash global.HashKeys
 	var targetValues string = ""
 	var RetClassNames string = ""
-	var NeedCatch []interface{}
-
-	RangeSource(p.Reqs, &NeedCatch)
+	if len(p.NeedCatch) == 0 {
+		RangeSource(p.Reqs, &p.NeedCatch)
+	}
 	for _, v := range p.Reqs {
 		if reflect.ValueOf(v).IsValid() {
 			RetClassNames = StringAdd(RetClassNames, reflect.ValueOf(v).Type().String(), " ")
 		}
 	}
-	for _, v := range NeedCatch {
+	for _, v := range p.NeedCatch {
 		switch v.(type) {
 		case string:
 			targetHash = append(targetHash, GetSource(v))
-			StringAdd(targetValues, v.(string), " ")
+			targetValues = StringAdd(targetValues, v.(string), " ")
 		}
 	}
-
+	var ArgsStr string
+	if p.ArgsStr != "" {
+		ArgsStr = p.ArgsStr
+	} else {
+		ArgsStr = Strval(p.Args)
+	}
 	var pool = request.Pool{
 		Source:           p.Source,
 		Interfaces:       []interface{}{},
@@ -58,7 +63,7 @@ func FmtHookPool(p request.PoolReq) {
 		CallerClass:      callerClass,
 		CallerMethod:     callerMethod,
 		RetClassName:     RetClassNames,
-		Args:             Strval(p.Args),
+		Args:             ArgsStr,
 	}
 
 	poolTree := request.PoolTree{
