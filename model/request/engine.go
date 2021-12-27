@@ -152,7 +152,7 @@ func (p *PoolTree) FMT(pools *[]Pool, onlyKey int, goroutineIDs map[string]bool)
 	p.Pool.InvokeId = onlyKey
 	*pools = append(*pools, *p.Pool)
 	goroutineIDs[p.GoroutineID] = true
-	fmt.Println(p.Pool.SourceValues, "===>", p.Pool.TargetValues)
+	fmt.Println(p.Pool.SourceValues, "=====>", p.Pool.TargetValues)
 	fmt.Println(p.Pool.SourceHash, "===>", p.Pool.TargetHash)
 	for k, _ := range p.Children {
 		onlyKey += 1

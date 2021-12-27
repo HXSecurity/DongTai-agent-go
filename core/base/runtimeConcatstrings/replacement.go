@@ -24,11 +24,15 @@ func concatstringsR(buf *tmpBuf, a []string) string {
 			ArgStr = utils.StringAdd(ArgStr, "]")
 		}
 	}
+	NeedHook := make([]interface{}, len(a))
+	for i, v := range a {
+		NeedHook[i] = v
+	}
 	utils.FmtHookPool(request.PoolReq{
 		Args:            utils.Collect(a),
 		ArgsStr:         ArgStr,
 		Reqs:            utils.Collect(e),
-		NeedHook:        utils.Collect(a),
+		NeedHook:        NeedHook,
 		NeedCatch:       utils.Collect(e),
 		Source:          false,
 		OriginClassName: "runtime",

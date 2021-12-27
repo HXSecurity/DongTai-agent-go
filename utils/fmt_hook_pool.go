@@ -4,6 +4,7 @@ import (
 	"go-agent/global"
 	"go-agent/model/request"
 	"reflect"
+	"strconv"
 )
 
 func Collect(args ...interface{}) []interface{} {
@@ -22,6 +23,9 @@ func FmtHookPool(p request.PoolReq) {
 		case string:
 			sourceHash = append(sourceHash, GetSource(v))
 			SourceValues = StringAdd(SourceValues, v.(string), " ")
+		case uintptr:
+			sourceHash = append(sourceHash, strconv.Itoa(int(v.(uintptr))))
+			SourceValues = StringAdd(SourceValues, strconv.Itoa(int(v.(uintptr))), " ")
 		}
 	}
 	var targetHash global.HashKeys
@@ -40,6 +44,9 @@ func FmtHookPool(p request.PoolReq) {
 		case string:
 			targetHash = append(targetHash, GetSource(v))
 			targetValues = StringAdd(targetValues, v.(string), " ")
+		case uintptr:
+			targetHash = append(sourceHash, strconv.Itoa(int(v.(uintptr))))
+			targetValues = StringAdd(SourceValues, strconv.Itoa(int(v.(uintptr))), " ")
 		}
 	}
 	var ArgsStr string
@@ -72,14 +79,17 @@ func FmtHookPool(p request.PoolReq) {
 		Children:    []*request.PoolTree{},
 		GoroutineID: CatGoroutineID(),
 	}
+
 	if !p.Source {
 		global.PoolTreeMap.Range(func(key, value interface{}) bool {
 			if key.(*global.HashKeys).Some(sourceHash) {
+				poolTree.GoroutineID = value.(*request.PoolTree).GoroutineID
 				value.(*request.PoolTree).Children = append(value.(*request.PoolTree).Children, &poolTree)
-				return false
+				global.PoolTreeMap.Store(&targetHash, &poolTree)
 			}
 			return true
 		})
+	} else {
+		global.PoolTreeMap.Store(&targetHash, &poolTree)
 	}
-	global.PoolTreeMap.Store(&targetHash, &poolTree)
 }

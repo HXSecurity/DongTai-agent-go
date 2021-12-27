@@ -2,9 +2,8 @@ package base
 
 import (
 	_ "go-agent/core/base/fmtSprintf"
-	_ "go-agent/core/base/httpRequestCookie"
-	_ "go-agent/core/base/httpRequestFormValue"
 	_ "go-agent/core/base/jsonDecoderDecode"
+	_ "go-agent/core/base/jsonNewDecoder"
 	_ "go-agent/core/base/jsonUnmarshal"
 	_ "go-agent/core/base/runtimeConcatstrings"
 	_ "go-agent/core/base/sqlDBQuery"
@@ -18,10 +17,9 @@ func init() {
 	global.InitViper()
 	hook.HookFunc("sqlDBQuery")
 	hook.HookFunc("fmtSprintf")
-	hook.HookFunc("httpRequestFormValue")
-	hook.HookFunc("httpRequestCookie")
 	hook.HookFunc("jsonUnmarshal")
 	hook.HookFunc("jsonDecoderDecode")
+	hook.HookFunc("jsonNewDecoder")
 	hook.HookFunc("runtimeConcatstrings")
 
 	////	此处为探针安装完成后的生命周期 注册 Agent 唤醒心跳等都可以从这里开始

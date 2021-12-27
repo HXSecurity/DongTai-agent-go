@@ -26,5 +26,5 @@ func (h *JsonDecoderDecode) Hook() {
 
 func (h *JsonDecoderDecode) UnHook() {
 	d := &json.Decoder{}
-	gohook.UnHookMethod(d, "Decode")
+	gohook.UnHookMethod(d, "JsonDecoderDecode")
 }

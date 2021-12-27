@@ -9,7 +9,7 @@ import (
 
 func HookFunc(s string) {
 	if model.HookMap[s] == nil {
-		fmt.Println("尚未注册此HOOK")
+		fmt.Println("尚未注册此HOOK:", s)
 	} else {
 		model.HookMap[s].Hook()
 	}

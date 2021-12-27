@@ -89,10 +89,8 @@ func MyServer(server *gin.Engine, w http.ResponseWriter, r *http.Request) {
 		goroutineIDs := make(map[string]bool)
 		global.PoolTreeMap.Range(func(key, value interface{}) bool {
 			if value.(*request.PoolTree).IsThisBegin(id) {
-				fmt.Println(value.(*request.PoolTree))
 				onlyKey += 1
 				value.(*request.PoolTree).FMT(&global.HookGroup[id].Detail.Function.Pool, onlyKey, goroutineIDs)
-				return true
 			}
 			return true
 		})

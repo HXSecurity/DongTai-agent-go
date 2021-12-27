@@ -93,7 +93,6 @@ func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *htt
 			if value.(*request.PoolTree).IsThisBegin(id) {
 				onlyKey += 1
 				value.(*request.PoolTree).FMT(&global.HookGroup[id].Detail.Function.Pool, onlyKey, goroutineIDs)
-				return true
 			}
 			return true
 		})
