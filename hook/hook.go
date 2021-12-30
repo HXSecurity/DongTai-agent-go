@@ -2,25 +2,23 @@ package hook
 
 import (
 	"fmt"
-	"go-agent/model"
+	"github.com/HXSecurity/DongTai-agent-go/model"
 )
 
 //此处为定义了Hook的注册方法和卸载方法
 
-func HookFunc(string string){
-	if(model.HookMap[string] == nil){
-		fmt.Println("尚未注册此HOOK")
-	}else{
-		model.HookMap[string].Hook()
+func HookFunc(s string) {
+	if model.HookMap[s] == nil {
+		fmt.Println("尚未注册此HOOK:", s)
+	} else {
+		model.HookMap[s].Hook()
 	}
 }
 
-
-
-func UnHookFunc(string string){
-	if(model.HookMap[string] == nil){
+func UnHookFunc(s string) {
+	if model.HookMap[s] == nil {
 		fmt.Println("尚未注册此HOOK")
-	}else{
-		model.HookMap[string].UnHook()
+	} else {
+		model.HookMap[s].UnHook()
 	}
 }
