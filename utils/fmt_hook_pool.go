@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"go-agent/global"
-	"go-agent/model/request"
+	"github.com/HXSecurity/DongTai-agent-go/global"
+	"github.com/HXSecurity/DongTai-agent-go/model/request"
 	"reflect"
 	"strconv"
 )
@@ -28,7 +28,7 @@ func FmtHookPool(p request.PoolReq) {
 			SourceValues = StringAdd(SourceValues, strconv.Itoa(int(v.(uintptr))), " ")
 		}
 	}
-	var targetHash global.HashKeys
+	var targetHash global.HashKeys = make(global.HashKeys, 0)
 	var targetValues string = ""
 	var RetClassNames string = ""
 	if len(p.NeedCatch) == 0 {

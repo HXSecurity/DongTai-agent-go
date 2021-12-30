@@ -2,8 +2,8 @@ package sqlDBQuery
 
 import (
 	"database/sql"
-	"go-agent/model/request"
-	"go-agent/utils"
+	"github.com/HXSecurity/DongTai-agent-go/model/request"
+	"github.com/HXSecurity/DongTai-agent-go/utils"
 )
 
 func Query(db *sql.DB, query string, args ...interface{}) (*sql.Rows, error) {

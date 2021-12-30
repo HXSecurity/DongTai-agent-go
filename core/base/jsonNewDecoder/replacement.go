@@ -2,9 +2,9 @@ package jsonNewDecoder
 
 import (
 	"encoding/json"
-	"go-agent/model"
-	"go-agent/model/request"
-	"go-agent/utils"
+	"github.com/HXSecurity/DongTai-agent-go/model"
+	"github.com/HXSecurity/DongTai-agent-go/model/request"
+	"github.com/HXSecurity/DongTai-agent-go/utils"
 	"io"
 	"reflect"
 )

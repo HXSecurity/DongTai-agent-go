@@ -2,9 +2,9 @@ package ginContextGetQueryMap
 
 import (
 	"fmt"
+	"github.com/HXSecurity/DongTai-agent-go/model"
 	"github.com/brahma-adshonor/gohook"
 	"github.com/gin-gonic/gin"
-	"go-agent/model"
 )
 
 func init() {

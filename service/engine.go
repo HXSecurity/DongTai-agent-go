@@ -5,11 +5,11 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"github.com/HXSecurity/DongTai-agent-go/api"
+	"github.com/HXSecurity/DongTai-agent-go/global"
+	"github.com/HXSecurity/DongTai-agent-go/utils"
 	"github.com/pkg/errors"
 	"github.com/rs/xid"
-	"go-agent/api"
-	"go-agent/global"
-	"go-agent/utils"
 	"os/exec"
 	"path/filepath"
 	"regexp"
@@ -17,8 +17,8 @@ import (
 	"strings"
 	"time"
 
-	//"go-agent/api"
-	"go-agent/model/request"
+	//"github.com/HXSecurity/DongTai-agent-go/api"
+	"github.com/HXSecurity/DongTai-agent-go/model/request"
 	"net"
 	"os"
 	"runtime"
@@ -145,7 +145,7 @@ func AgentRegister() (err error) {
 						global.AgentId = agentId
 						go func() {
 							for {
-								time.Sleep(1 * time.Second)
+								time.Sleep(5 * time.Second)
 								PingPang()
 							}
 						}()
@@ -179,7 +179,6 @@ func getCurrentPath() (string, error) {
 }
 
 func PingPang() {
-	return
 	s, err := getServerInfo()
 	if err != nil {
 		return

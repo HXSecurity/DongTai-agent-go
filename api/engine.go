@@ -3,9 +3,9 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/HXSecurity/DongTai-agent-go/model/request"
+	"github.com/HXSecurity/DongTai-agent-go/model/response"
 	"github.com/pkg/errors"
-	"go-agent/model/request"
-	"go-agent/model/response"
 )
 
 /*	AgentRegister
@@ -66,7 +66,6 @@ func ReportUpload(req request.UploadReq) {
 		for _, v := range errs {
 			fmt.Println(v)
 		}
-		fmt.Println("boom")
 		return
 	}
 	if resp.StatusCode == 200 {
@@ -75,7 +74,7 @@ func ReportUpload(req request.UploadReq) {
 		if res.Status == 201 {
 			fmt.Println("pang")
 		} else {
-			fmt.Println(res.Msg)
+			//fmt.Println(res.Msg)
 		}
 		if err != nil {
 			fmt.Println(err)

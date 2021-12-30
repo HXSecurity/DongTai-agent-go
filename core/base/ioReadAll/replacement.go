@@ -2,9 +2,9 @@ package ioReadAll
 
 import (
 	"fmt"
+	"github.com/HXSecurity/DongTai-agent-go/model/request"
+	"github.com/HXSecurity/DongTai-agent-go/utils"
 	"github.com/pkg/errors"
-	"go-agent/model/request"
-	"go-agent/utils"
 	"io"
 	"reflect"
 )

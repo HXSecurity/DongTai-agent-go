@@ -2,8 +2,8 @@ package gormDBGroup
 
 import (
 	"fmt"
+	"github.com/HXSecurity/DongTai-agent-go/model"
 	"github.com/brahma-adshonor/gohook"
-	"go-agent/model"
 	"gorm.io/gorm"
 )
 

@@ -1,15 +1,15 @@
 package base
 
 import (
-	_ "go-agent/core/base/fmtSprintf"
-	_ "go-agent/core/base/jsonDecoderDecode"
-	_ "go-agent/core/base/jsonNewDecoder"
-	_ "go-agent/core/base/jsonUnmarshal"
-	_ "go-agent/core/base/runtimeConcatstrings"
-	_ "go-agent/core/base/sqlDBQuery"
-	"go-agent/global"
-	"go-agent/hook"
-	"go-agent/service"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/base/fmtSprintf"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/base/jsonDecoderDecode"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/base/jsonNewDecoder"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/base/jsonUnmarshal"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/base/runtimeConcatstrings"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/base/sqlDBQuery"
+	"github.com/HXSecurity/DongTai-agent-go/global"
+	"github.com/HXSecurity/DongTai-agent-go/hook"
+	"github.com/HXSecurity/DongTai-agent-go/service"
 )
 
 func init() {

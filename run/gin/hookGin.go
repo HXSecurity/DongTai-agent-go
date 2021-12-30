@@ -1,18 +1,18 @@
 package gin
 
 import (
-	_ "go-agent/core/gin/ginContextGetPostFormArray"
-	_ "go-agent/core/gin/ginContextGetPostFormMap"
-	_ "go-agent/core/gin/ginContextGetQueryArray"
-	_ "go-agent/core/gin/ginContextGetQueryMap"
-	_ "go-agent/core/gin/ginContextParam"
-	_ "go-agent/core/gin/ginContextShouldBindBodyWith"
-	_ "go-agent/core/gin/ginContextShouldBindUri"
-	_ "go-agent/core/gin/ginContextShouldBindWith"
-	_ "go-agent/core/gin/ginEngineServerHTTP"
-	_ "go-agent/core/http/httpRequestCookie"
-	"go-agent/hook"
-	_ "go-agent/run/base"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/gin/ginContextGetPostFormArray"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/gin/ginContextGetPostFormMap"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/gin/ginContextGetQueryArray"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/gin/ginContextGetQueryMap"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/gin/ginContextParam"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/gin/ginContextShouldBindBodyWith"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/gin/ginContextShouldBindUri"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/gin/ginContextShouldBindWith"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/gin/ginEngineServerHTTP"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/http/httpRequestCookie"
+	"github.com/HXSecurity/DongTai-agent-go/hook"
+	_ "github.com/HXSecurity/DongTai-agent-go/run/base"
 )
 
 func init() {

@@ -1,8 +1,8 @@
 package gormDBExec
 
 import (
-	"go-agent/model/request"
-	"go-agent/utils"
+	"github.com/HXSecurity/DongTai-agent-go/model/request"
+	"github.com/HXSecurity/DongTai-agent-go/utils"
 	"gorm.io/gorm"
 )
 

@@ -1,9 +1,9 @@
 package ginContextGetPostFormMap
 
 import (
+	"github.com/HXSecurity/DongTai-agent-go/model/request"
+	"github.com/HXSecurity/DongTai-agent-go/utils"
 	"github.com/gin-gonic/gin"
-	"go-agent/model/request"
-	"go-agent/utils"
 )
 
 func GetPostFormMap(c *gin.Context, key string) (map[string]string, bool) {

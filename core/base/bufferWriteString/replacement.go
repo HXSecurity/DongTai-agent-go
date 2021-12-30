@@ -2,8 +2,8 @@ package bufferWriteString
 
 import (
 	"bytes"
-	"go-agent/model/request"
-	"go-agent/utils"
+	"github.com/HXSecurity/DongTai-agent-go/model/request"
+	"github.com/HXSecurity/DongTai-agent-go/utils"
 )
 
 func WriteString(b *bytes.Buffer, s string) (n int, err error) {

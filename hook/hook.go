@@ -2,7 +2,7 @@ package hook
 
 import (
 	"fmt"
-	"go-agent/model"
+	"github.com/HXSecurity/DongTai-agent-go/model"
 )
 
 //此处为定义了Hook的注册方法和卸载方法

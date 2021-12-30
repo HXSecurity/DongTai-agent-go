@@ -1,14 +1,14 @@
 package gin
 
 import (
-	_ "go-agent/core/gorm/gormDBExec"
-	_ "go-agent/core/gorm/gormDBGroup"
-	_ "go-agent/core/gorm/gormDBHaving"
-	_ "go-agent/core/gorm/gormDBOrder"
-	_ "go-agent/core/gorm/gormDBPluck"
-	_ "go-agent/core/gorm/gormDBRaw"
-	_ "go-agent/core/gorm/gormDBSelect"
-	"go-agent/hook"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/gorm/gormDBExec"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/gorm/gormDBGroup"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/gorm/gormDBHaving"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/gorm/gormDBOrder"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/gorm/gormDBPluck"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/gorm/gormDBRaw"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/gorm/gormDBSelect"
+	"github.com/HXSecurity/DongTai-agent-go/hook"
 )
 
 func init() {

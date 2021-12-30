@@ -3,8 +3,8 @@ package bufferWriteString
 import (
 	"bytes"
 	"fmt"
+	"github.com/HXSecurity/DongTai-agent-go/model"
 	"github.com/brahma-adshonor/gohook"
-	"go-agent/model"
 )
 
 func init() {

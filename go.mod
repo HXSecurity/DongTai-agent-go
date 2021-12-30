@@ -1,4 +1,4 @@
-module go-agent
+module github.com/HXSecurity/DongTai-agent-go
 
 go 1.17
 

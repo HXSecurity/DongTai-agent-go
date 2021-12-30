@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"go-agent/global"
-	"go-agent/model/request"
+	"github.com/HXSecurity/DongTai-agent-go/global"
+	"github.com/HXSecurity/DongTai-agent-go/model/request"
 )
 
 func RunMapGCbYGoroutineID(goroutineIDs map[string]bool) {

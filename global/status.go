@@ -1,7 +1,7 @@
 package global
 
 import (
-	"go-agent/model/request"
+	"github.com/HXSecurity/DongTai-agent-go/model/request"
 	"sync"
 )
 

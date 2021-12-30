@@ -1,11 +1,11 @@
 package http
 
 import (
-	_ "go-agent/core/http/httpRequestCookie"
-	_ "go-agent/core/http/httpRequestFormValue"
-	_ "go-agent/core/http/httpServeHTTP"
-	"go-agent/hook"
-	_ "go-agent/run/base"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/http/httpRequestCookie"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/http/httpRequestFormValue"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/http/httpServeHTTP"
+	"github.com/HXSecurity/DongTai-agent-go/hook"
+	_ "github.com/HXSecurity/DongTai-agent-go/run/base"
 )
 
 func init() {

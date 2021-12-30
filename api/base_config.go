@@ -2,9 +2,9 @@ package api
 
 import (
 	"encoding/json"
+	"github.com/HXSecurity/DongTai-agent-go/global"
+	"github.com/HXSecurity/DongTai-agent-go/utils"
 	"github.com/parnurzeal/gorequest"
-	"go-agent/global"
-	"go-agent/utils"
 )
 
 // NewRequest
@@ -22,10 +22,9 @@ func POST(url string, body interface{}) *gorequest.SuperAgent {
 	s, _ := json.Marshal(body)
 	jsonStr := utils.GzipStr(string(s))
 	request := NewRequest()
-	request.Post(global.Config.OpenAPI+url).
+	request.Post(global.Config.DongtaiGoOpenapi+url).
 		Set("Content-Type", "application/json").
-		Set("Authorization", "Token "+global.Config.Token).
-		Set("Content-Encoding", "gzip").
+		Set("Authorization", "Token "+global.Config.DongtaiGoToken).
 		Send(jsonStr)
 	return request
 }
@@ -36,6 +35,6 @@ func POST(url string, body interface{}) *gorequest.SuperAgent {
 // token 身份标识
 func GET(url string, body interface{}) *gorequest.SuperAgent {
 	request := NewRequest()
-	request.Get(global.Config.OpenAPI+url).Set("Authorization", "Token "+global.Config.Token).Query(body)
+	request.Get(global.Config.DongtaiGoOpenapi+url).Set("Authorization", "Token "+global.Config.DongtaiGoToken).Query(body)
 	return request
 }

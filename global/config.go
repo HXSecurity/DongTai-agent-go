@@ -2,15 +2,15 @@ package global
 
 import (
 	"fmt"
+	"github.com/HXSecurity/DongTai-agent-go/model"
 	"github.com/spf13/viper"
-	"go-agent/model"
 )
 
 var Config model.Config
 
 func InitViper() {
 	v := viper.New()
-	v.SetConfigFile("config.yaml")
+	v.SetConfigFile("dongtai-go-agent-config.yaml")
 	v.SetConfigType("yaml")
 	err := v.ReadInConfig()
 	if err != nil {

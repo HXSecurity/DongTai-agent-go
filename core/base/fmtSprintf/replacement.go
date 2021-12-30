@@ -1,8 +1,8 @@
 package fmtSprintf
 
 import (
-	"go-agent/model/request"
-	"go-agent/utils"
+	"github.com/HXSecurity/DongTai-agent-go/model/request"
+	"github.com/HXSecurity/DongTai-agent-go/utils"
 )
 
 func Sprintf(format string, a ...interface{}) string {

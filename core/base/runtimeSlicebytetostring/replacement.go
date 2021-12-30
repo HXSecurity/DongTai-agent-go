@@ -1,8 +1,6 @@
 package runtimeSlicebytetostring
 
 import (
-	"fmt"
-	"go-agent/utils"
 	_ "unsafe"
 )
 
@@ -50,10 +48,6 @@ func slicebytetostring(buf *tmpBuf, ptr *byte, n int) (str string)
 
 func slicebytetostringR(buf *tmpBuf, ptr *byte, n int) (str string) {
 	e := slicebytetostringT(buf, ptr, n)
-	//fmt.Println(buf,ptr)
-	if utils.IsHook("go-agent/core/httpServeHTTP.MyServer", 7) {
-		fmt.Println("在http路由入口返回值为", e)
-	}
 	//fmt.Println("返回值", e)
 	return e
 }

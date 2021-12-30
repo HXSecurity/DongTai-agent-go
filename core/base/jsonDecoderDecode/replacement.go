@@ -2,8 +2,8 @@ package jsonDecoderDecode
 
 import (
 	"encoding/json"
-	"go-agent/model/request"
-	"go-agent/utils"
+	"github.com/HXSecurity/DongTai-agent-go/model/request"
+	"github.com/HXSecurity/DongTai-agent-go/utils"
 	"reflect"
 )
 
