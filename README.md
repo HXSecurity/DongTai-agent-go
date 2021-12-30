@@ -21,18 +21,23 @@ DongTai-agent-go is the data collection terminal developed by **Dongtai IAST** f
 
 DongTai-agent-go is composed of three main parts: `core`, `run`, and `service`, among which:
 
--`run` is used to run the agent of the package that needs to be instrumented on demand
--`core` is the core package, and its main functions are: bytecode instrumentation, data collection, data preprocessing, data reporting, third-party component management, etc.
--`service` is used to obtain the request sent by the application and the response received, for data display and request replay function.
+`run` is used to run the agent of the package that needs to be instrumented on demand
+
+`core` is the core package, and its main functions are: bytecode instrumentation, data collection, data preprocessing, data reporting, third-party component management, etc.
+
+`service` is used to obtain the request sent by the application and the response received, for data display and request replay function.
 
 ## Application scenario
 
--DevOps process
--Safety test before going live
--Third-party component management
--Code audit
--0 Day mining
+DevOps process
 
+Safety test before going live
+
+Third-party component management
+
+Code audit
+
+0 Day mining
 
 ## Get started quickly
 
@@ -54,5 +59,6 @@ Please refer to: [Quick Start](https://doc.dongtai.io)
 
 #### Supported Go versions and middleware
 
--Go 1.11+
--Gin, Gorm and other mainstream software and middleware 
+Go 1.11+
+
+Gin, Gorm and other mainstream software and middleware 
