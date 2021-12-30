@@ -1,6 +1,6 @@
 module github.com/HXSecurity/DongTai-agent-go
 
-go 1.17
+go 1.11
 
 require (
 	github.com/brahma-adshonor/gohook v1.1.9
