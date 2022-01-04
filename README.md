@@ -7,8 +7,6 @@
 [![GitHub forks](https://img.shields.io/github/forks/HXSecurity/DongTai-Agent-Go?label=Forks&logo=github)](https://github.com/HXSecurity/DongTai-agent-go)
 [![GitHub Contributors](https://img.shields.io/github/contributors-anon/HXSecurity/DongTai-agent-go?label=Contributors&logo=github)](https://github.com/HXSecurity/DongTai-agent-go)
 
-
-[![CI](https://github.com/HXSecurity/DongTai-agent-go/actions/workflows/release-agent.yml/badge.svg)](https://github.com/HXSecurity/DongTai-agent-go/actions/workflows/release-agent.yml)
 [![Github Version](https://img.shields.io/github/v/release/HXSecurity/DongTai-agent-go?display_name=tag&include_prereleases&sort=semver)](https://github.com/HXSecurity/DongTai-agent-go/releases)
 [![Release downloads](https://shields.io/github/downloads/HXSecurity/DongTai-Agent-go/total)](https://github.com/HXSecurity/DongTai-agent-go/releases)
 
