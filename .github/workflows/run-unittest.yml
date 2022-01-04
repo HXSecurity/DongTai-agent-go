@@ -16,6 +16,7 @@ jobs:
   Run-Go-CI:
     name: Run Go Agent CI
     runs-on: ubuntu-latest
+    if: github.event_name == 'push'
     steps:
       - uses: joelwmale/webhook-action@master
         with:
@@ -25,11 +26,9 @@ jobs:
   Test-Agent:
     name: Update this repo's README
     runs-on: ubuntu-latest
-    needs:
-      - Run-Go-CI
     strategy:
       matrix:
-        go: [ '1.17' ]
+        go: [ '1.17', '1.16', '1.15', '1.14', '1.13', '1.12', '1.11' ]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
@@ -41,6 +40,7 @@ jobs:
   Finish-Go-CI:
     name: Finish Go CI
     runs-on: ubuntu-latest
+    if: github.event_name == 'push'
     needs:
       - Test-Agent
     steps:
