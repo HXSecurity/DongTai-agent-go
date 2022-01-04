@@ -1,12 +1,32 @@
 name: Run UnitTest
 
 on:
-  push:
+  pull_request:
+    paths-ignore:
+      - '.github/**'
+      - 'changes/**'
+      - 'deploy/**'
+      - '**.md'
+      - '**.yml'
+      - '**.xml'
+      - 'LICENSE'
+      - '.gitignore'
 
 jobs:
-  Build-Agent:
+  Run-Go-CI:
+    name: Run Go Agent CI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: joelwmale/webhook-action@master
+        with:
+          url: ${{ secrets.WEBHOOK_URL }}
+          body: '{"msg_type": "interactive","card": {"config": {"wide_screen_mode": true,"enable_forward": true},"elements": [{"tag": "div","text": {"content": "状态：项目${{github.repository}}构建开始\n分支：${{github.ref}}\n流程：${{github.workflow}}\n构建编号：${{github.run_number}}\n触发事件：${{github.event_name}}\n提交人：${{github.actor}}\nSHA-1：${{github.sha}}\n","tag": "lark_md"}}]}}'
+
+  Test-Agent:
     name: Update this repo's README
     runs-on: ubuntu-latest
+    needs:
+      - Run-Go-CI
     strategy:
       matrix:
         go: [ '1.17' ]
@@ -17,3 +37,15 @@ jobs:
           go-version: ${{ matrix.go }} # T
 
       - run: bash .github/workflows/scripts/run-govwa.sh
+
+  Finish-Go-CI:
+    name: Finish Go CI
+    runs-on: ubuntu-latest
+    needs:
+      - Test-Agent
+    steps:
+      - uses: joelwmale/webhook-action@master
+        with:
+          url: ${{ secrets.WEBHOOK_URL }}
+          body: '{"msg_type": "interactive","card": {"config": {"wide_screen_mode": true,"enable_forward": true},"elements": [{"tag": "div","text": {"content": "状态：项目${{github.repository}}构建开始\n分支：${{github.ref}}\n流程：${{github.workflow}}\n构建编号：${{github.run_number}}\n触发事件：${{github.event_name}}\n提交人：${{github.actor}}\nSHA-1：${{github.sha}}\n","tag": "lark_md"}}]}}'
+
