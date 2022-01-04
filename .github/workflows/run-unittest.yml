@@ -1,0 +1,19 @@
+name: Run UnitTest
+
+on:
+  push:
+
+jobs:
+  Build-Agent:
+    name: Update this repo's README
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go: [ '1.17' ]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go }} # T
+
+      - run: bash .github/workflows/scripts/run-govwa.sh
