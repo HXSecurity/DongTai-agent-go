@@ -14,22 +14,20 @@ import (
 	"net/http"
 	"reflect"
 	"strconv"
+	"strings"
 	"time"
 )
 
 func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *http.Request) {
 	MyHttpRouterServerTemp(server, w, r)
 	id := utils.CatGoroutineID()
-	//fmt.Println(r.Body,"body")
 	go func() {
 		t := reflect.ValueOf(r.Body)
-		b, err := json.Marshal(r.Header)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		header := base64.StdEncoding.EncodeToString(b)
+		var headerBase string
 		body := ""
+		for k, v := range r.Header {
+			headerBase += k + ": " + strings.Join(v, ",") + "\n"
+		}
 		if t.Kind() == reflect.Ptr {
 			buf := t.
 				Elem().
@@ -50,7 +48,7 @@ func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *htt
 			}
 			body = reqArr[len(reqArr)-1]
 		}
-
+		header := base64.StdEncoding.EncodeToString([]byte(headerBase))
 		scheme := "http"
 		if r.TLS != nil {
 			scheme = "https"
