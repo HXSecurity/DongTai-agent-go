@@ -27,7 +27,14 @@ import (
 func AgentRegister() (err error) {
 	OS := runtime.GOOS
 	hostname, _ := os.Hostname()
-	version := "v1.0"
+	version := "1.0.0"
+	if global.Config.DongtaiGoProjectVersion != "" {
+		version = global.Config.DongtaiGoProjectVersion
+	}
+	projectName := "project Name"
+	if global.Config.DongtaiGoProjectVersion != "" {
+		projectName = global.Config.DongtaiGoProjectName
+	}
 	id := xid.New().String()
 	name := OS + "-" + hostname + "-" + version + "-" + id
 	interfaces, err := net.Interfaces()
@@ -73,21 +80,21 @@ func AgentRegister() (err error) {
 		return err
 	}
 	req := request.AgentRegisterReq{
-		Name:             name,
-		Language:         "GO",
-		Version:          version,
-		ProjectName:      "testProject",
-		Hostname:         hostname,
-		Network:          ips,
-		ContainerName:    "GO",
-		ContainerVersion: "GO",
-		ServerAddr:       "",
-		ServerPort:       "",
-		ServerPath:       filePath,
-		ServerEnv:        encodeEnv,
-		Pid:              strconv.Itoa(pid),
+		AutoCreateProject: global.Config.DongtaiGoProjectCreate,
+		Name:              name,
+		Language:          "GO",
+		Version:           version,
+		ProjectName:       projectName,
+		Hostname:          hostname,
+		Network:           ips,
+		ContainerName:     "GO",
+		ContainerVersion:  "GO",
+		ServerAddr:        "",
+		ServerPort:        "",
+		ServerPath:        filePath,
+		ServerEnv:         encodeEnv,
+		Pid:               strconv.Itoa(pid),
 	}
-
 	go func() {
 		for {
 			fmt.Println("等待当前程序http启动完成")

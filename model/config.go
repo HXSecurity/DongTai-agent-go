@@ -5,4 +5,5 @@ type Config struct {
 	DongtaiGoToken          string
 	DongtaiGoProjectName    string
 	DongtaiGoProjectVersion string
+	DongtaiGoProjectCreate  bool
 }

@@ -3,19 +3,20 @@ package request
 import "fmt"
 
 type AgentRegisterReq struct {
-	Name             string `json:"name"`
-	Language         string `json:"language"`
-	Version          string `json:"version"`
-	ProjectName      string `json:"projectName"`
-	Hostname         string `json:"hostname"`
-	Network          string `json:"network"`
-	ContainerName    string `json:"container_name"`
-	ContainerVersion string `json:"container_version"`
-	ServerAddr       string `json:"serverAddr"`
-	ServerPort       string `json:"serverPort"`
-	ServerPath       string `json:"serverPath"`
-	ServerEnv        string `json:"serverEnv"`
-	Pid              string `json:"pid"`
+	AutoCreateProject bool   `json:"autoCreateProject"`
+	Name              string `json:"name"`
+	Language          string `json:"language"`
+	Version           string `json:"version"`
+	ProjectName       string `json:"projectName"`
+	Hostname          string `json:"hostname"`
+	Network           string `json:"network"`
+	ContainerName     string `json:"containerName"`
+	ContainerVersion  string `json:"containerVersion"`
+	ServerAddr        string `json:"serverAddr"`
+	ServerPort        string `json:"serverPort"`
+	ServerPath        string `json:"serverPath"`
+	ServerEnv         string `json:"serverEnv"`
+	Pid               string `json:"pid"`
 }
 
 type HookRuleReq struct {
@@ -32,7 +33,7 @@ type HookRuleReq struct {
 type UploadReq struct {
 	Type     int    `json:"type"`
 	Detail   Detail `json:"detail"`
-	InvokeId int    `json:"invoke_id"`
+	InvokeId int    `json:"invokeId"`
 }
 
 type Detail struct {
