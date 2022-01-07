@@ -72,7 +72,7 @@ func ReportUpload(req request.UploadReq) {
 		var res response.ResBase
 		err := json.Unmarshal([]byte(body), &res)
 		if res.Status == 201 {
-			fmt.Println("pang")
+			//fmt.Println("pang")
 		} else {
 			//fmt.Println(res.Msg)
 		}
