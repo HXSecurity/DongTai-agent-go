@@ -13,8 +13,8 @@ import (
 )
 
 func init() {
-	service.AgentRegister()
 	global.InitViper()
+	service.AgentRegister()
 	hook.HookFunc("sqlDBQuery")
 	hook.HookFunc("fmtSprintf")
 	hook.HookFunc("jsonUnmarshal")
