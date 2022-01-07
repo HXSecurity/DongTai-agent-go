@@ -10,8 +10,8 @@ type AgentRegisterReq struct {
 	ProjectName       string `json:"projectName"`
 	Hostname          string `json:"hostname"`
 	Network           string `json:"network"`
-	ContainerName     string `json:"container_name"`
-	ContainerVersion  string `json:"container_version"`
+	ContainerName     string `json:"containerName"`
+	ContainerVersion  string `json:"containerVersion"`
 	ServerAddr        string `json:"serverAddr"`
 	ServerPort        string `json:"serverPort"`
 	ServerPath        string `json:"serverPath"`
@@ -33,7 +33,7 @@ type HookRuleReq struct {
 type UploadReq struct {
 	Type     int    `json:"type"`
 	Detail   Detail `json:"detail"`
-	InvokeId int    `json:"invoke_id"`
+	InvokeId int    `json:"invokeId"`
 }
 
 type Detail struct {
