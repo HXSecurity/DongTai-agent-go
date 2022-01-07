@@ -27,7 +27,14 @@ import (
 func AgentRegister() (err error) {
 	OS := runtime.GOOS
 	hostname, _ := os.Hostname()
-	version := global.Config.DongtaiGoProjectVersion
+	version := "1.0.0"
+	if global.Config.DongtaiGoProjectVersion != "" {
+		version = global.Config.DongtaiGoProjectVersion
+	}
+	projectName := "project Name"
+	if global.Config.DongtaiGoProjectVersion != "" {
+		projectName = global.Config.DongtaiGoProjectName
+	}
 	id := xid.New().String()
 	name := OS + "-" + hostname + "-" + version + "-" + id
 	interfaces, err := net.Interfaces()
@@ -77,7 +84,7 @@ func AgentRegister() (err error) {
 		Name:              name,
 		Language:          "GO",
 		Version:           version,
-		ProjectName:       global.Config.DongtaiGoProjectName,
+		ProjectName:       projectName,
 		Hostname:          hostname,
 		Network:           ips,
 		ContainerName:     "GO",
