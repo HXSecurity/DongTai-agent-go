@@ -4,8 +4,6 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/base64"
-	"encoding/json"
-	"fmt"
 	"github.com/HXSecurity/DongTai-agent-go/api"
 	"github.com/HXSecurity/DongTai-agent-go/global"
 	"github.com/HXSecurity/DongTai-agent-go/model/request"
@@ -76,14 +74,14 @@ func MyServer(server *http.ServeMux, w http.ResponseWriter, r *http.Request) {
 				},
 			},
 		}
-		resH, err := json.Marshal(w.Header())
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
 		res, _ := global.ResponseMap.LoadAndDelete(id)
 		resBody := res.(string)
-		resHeader := base64.StdEncoding.EncodeToString(resH)
+		value2, _ := global.ResponseHeaderMap.LoadAndDelete(id)
+		resH := value2.(string)
+		for k, v := range w.Header() {
+			resH += k + ": " + strings.Join(v, ",") + "\n"
+		}
+		resHeader := base64.StdEncoding.EncodeToString([]byte(resH))
 		HookGroup.Detail.ResHeader = resHeader
 		HookGroup.Detail.ResBody = resBody
 		goroutineIDs := make(map[string]bool)
