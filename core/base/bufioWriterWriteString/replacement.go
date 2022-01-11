@@ -1,4 +1,4 @@
-package bufioWriterWrite
+package bufioWriterWriteString
 
 import (
 	"bufio"
@@ -6,16 +6,7 @@ import (
 	"github.com/HXSecurity/DongTai-agent-go/utils"
 )
 
-func Write(b *bufio.Writer, v []byte) (n int, err error) {
-	if utils.IsHook("net/http.(*response).write", 6) {
-		value, ok := global.ResponseMap.Load(utils.CatGoroutineID())
-		if ok {
-			str := utils.StringAdd(value.(string), string(v))
-			global.ResponseMap.Store(utils.CatGoroutineID(), str)
-		} else {
-			global.ResponseMap.Store(utils.CatGoroutineID(), string(v))
-		}
-	}
+func WriteString(b *bufio.Writer, v string) (n int, err error) {
 	if utils.IsHook("net/http.extraHeader.Write", 6) {
 		value, ok := global.ResponseHeaderMap.Load(utils.CatGoroutineID())
 		if ok {
@@ -35,9 +26,9 @@ func Write(b *bufio.Writer, v []byte) (n int, err error) {
 	//	MethodName:      "WriteString",
 	//	ClassName:       "bytes.(*Buffer)",
 	//})
-	return WriteT(b, v)
+	return WriteStringT(b, v)
 }
 
-func WriteT(b *bufio.Writer, v []byte) (n int, err error) {
+func WriteStringT(b *bufio.Writer, v string) (n int, err error) {
 	return n, err
 }

@@ -18,7 +18,8 @@ func (h *HashKeys) Some(source []string) bool {
 }
 
 var (
-	AgentId     = 0
-	PoolTreeMap = sync.Map{}
-	ResponseMap = sync.Map{}
+	AgentId           = 0
+	PoolTreeMap       = sync.Map{}
+	ResponseMap       = sync.Map{}
+	ResponseHeaderMap = sync.Map{}
 )
