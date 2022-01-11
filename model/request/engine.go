@@ -1,21 +1,22 @@
 package request
 
-import "fmt"
+import "github.com/HXSecurity/DongTai-agent-go/global"
 
 type AgentRegisterReq struct {
-	Name             string `json:"name"`
-	Language         string `json:"language"`
-	Version          string `json:"version"`
-	ProjectName      string `json:"projectName"`
-	Hostname         string `json:"hostname"`
-	Network          string `json:"network"`
-	ContainerName    string `json:"container_name"`
-	ContainerVersion string `json:"container_version"`
-	ServerAddr       string `json:"serverAddr"`
-	ServerPort       string `json:"serverPort"`
-	ServerPath       string `json:"serverPath"`
-	ServerEnv        string `json:"serverEnv"`
-	Pid              string `json:"pid"`
+	AutoCreateProject bool   `json:"autoCreateProject"`
+	Name              string `json:"name"`
+	Language          string `json:"language"`
+	Version           string `json:"version"`
+	ProjectName       string `json:"projectName"`
+	Hostname          string `json:"hostname"`
+	Network           string `json:"network"`
+	ContainerName     string `json:"containerName"`
+	ContainerVersion  string `json:"containerVersion"`
+	ServerAddr        string `json:"serverAddr"`
+	ServerPort        string `json:"serverPort"`
+	ServerPath        string `json:"serverPath"`
+	ServerEnv         string `json:"serverEnv"`
+	Pid               string `json:"pid"`
 }
 
 type HookRuleReq struct {
@@ -32,7 +33,7 @@ type HookRuleReq struct {
 type UploadReq struct {
 	Type     int    `json:"type"`
 	Detail   Detail `json:"detail"`
-	InvokeId int    `json:"invoke_id"`
+	InvokeId int    `json:"invokeId"`
 }
 
 type Detail struct {
@@ -152,10 +153,11 @@ func (p *PoolTree) FMT(pools *[]Pool, onlyKey int, goroutineIDs map[string]bool)
 	p.Pool.InvokeId = onlyKey
 	*pools = append(*pools, *p.Pool)
 	goroutineIDs[p.GoroutineID] = true
-	fmt.Println(p.Pool.SourceValues, "=====>", p.Pool.TargetValues)
-	fmt.Println(p.Pool.SourceHash, "===>", p.Pool.TargetHash)
-	for k, _ := range p.Children {
+	//fmt.Println(p.Pool.SourceValues, "=====>", p.Pool.TargetValues)
+	//fmt.Println(p.Pool.SourceHash, "===>", p.Pool.TargetHash)
+	for k, v := range p.Children {
 		onlyKey += 1
+		global.PoolTreeMap.Delete(&v.Pool.TargetHash)
 		p.Children[k].FMT(pools, onlyKey, goroutineIDs)
 	}
 }

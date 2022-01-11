@@ -43,7 +43,7 @@ func RangeStructFiled(i interface{}, needHook *[]interface{}) {
 	v = reflect.ValueOf(i)
 	fieldNum := t.NumField()
 	for i := 0; i < fieldNum; i++ {
-		if !t.Field(i).IsExported() {
+		if t.Field(i).PkgPath != "" {
 			continue
 		}
 		k := t.Field(i).Name

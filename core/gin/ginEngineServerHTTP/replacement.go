@@ -14,6 +14,7 @@ import (
 	"net/http"
 	"reflect"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -22,13 +23,11 @@ func MyServer(server *gin.Engine, w http.ResponseWriter, r *http.Request) {
 	id := utils.CatGoroutineID()
 	go func() {
 		t := reflect.ValueOf(r.Body)
-		b, err := json.Marshal(r.Header)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		header := base64.StdEncoding.EncodeToString(b)
+		var headerBase string
 		body := ""
+		for k, v := range r.Header {
+			headerBase += k + ": " + strings.Join(v, ",") + "\n"
+		}
 		if t.Kind() == reflect.Ptr {
 			buf := t.
 				Elem().
@@ -49,6 +48,7 @@ func MyServer(server *gin.Engine, w http.ResponseWriter, r *http.Request) {
 			}
 			body = reqArr[len(reqArr)-1]
 		}
+		header := base64.StdEncoding.EncodeToString([]byte(headerBase))
 		scheme := "http"
 		if r.TLS != nil {
 			scheme = "https"
@@ -57,7 +57,7 @@ func MyServer(server *gin.Engine, w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return
 		}
-		global.HookGroup[id] = &request.UploadReq{
+		HookGroup := &request.UploadReq{
 			Type:     36,
 			InvokeId: onlyKey,
 			Detail: request.Detail{
@@ -82,19 +82,22 @@ func MyServer(server *gin.Engine, w http.ResponseWriter, r *http.Request) {
 			fmt.Println(err)
 			return
 		}
-		resBody := string(reflect.ValueOf(w).Elem().FieldByName("w").Elem().FieldByName("buf").Bytes())
+		res, _ := global.ResponseMap.LoadAndDelete(id)
+		resBody := res.(string)
 		resHeader := base64.StdEncoding.EncodeToString(resH)
-		global.HookGroup[id].Detail.ResHeader = resHeader
-		global.HookGroup[id].Detail.ResBody = resBody
+		HookGroup.Detail.ResHeader = resHeader
+		HookGroup.Detail.ResBody = resBody
 		goroutineIDs := make(map[string]bool)
 		global.PoolTreeMap.Range(func(key, value interface{}) bool {
 			if value.(*request.PoolTree).IsThisBegin(id) {
 				onlyKey += 1
-				value.(*request.PoolTree).FMT(&global.HookGroup[id].Detail.Function.Pool, onlyKey, goroutineIDs)
+				global.PoolTreeMap.Delete(key)
+				value.(*request.PoolTree).FMT(&HookGroup.Detail.Function.Pool, onlyKey, goroutineIDs)
+				return false
 			}
 			return true
 		})
-		api.ReportUpload(*global.HookGroup[id])
+		api.ReportUpload(*HookGroup)
 		utils.RunMapGCbYGoroutineID(goroutineIDs)
 	}()
 	return
