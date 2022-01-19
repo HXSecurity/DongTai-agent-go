@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/base64"
+	"fmt"
 	"github.com/HXSecurity/DongTai-agent-go/api"
 	"github.com/HXSecurity/DongTai-agent-go/global"
 	"github.com/HXSecurity/DongTai-agent-go/model/request"
@@ -15,6 +16,8 @@ import (
 	"strings"
 	"time"
 )
+
+var MWrite func([]byte) (int, error)
 
 func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *http.Request) {
 	MyHttpRouterServerTemp(server, w, r)
@@ -75,10 +78,16 @@ func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *htt
 				},
 			},
 		}
-		res, _ := global.ResponseMap.LoadAndDelete(id)
-		resBody := res.(string)
-		value2, _ := global.ResponseHeaderMap.LoadAndDelete(id)
-		resH := value2.(string)
+		var resBody string
+		var resH string
+		res, ok := global.ResponseMap.LoadAndDelete(id)
+		if ok {
+			resBody = res.(string)
+		}
+		value2, ok2 := global.ResponseHeaderMap.LoadAndDelete(id)
+		if ok2 {
+			resH = value2.(string)
+		}
 		for k, v := range w.Header() {
 			resH += k + ": " + strings.Join(v, ",") + "\n"
 		}
@@ -106,4 +115,13 @@ func MyHttpRouterServerTemp(server *httprouter.Router, w http.ResponseWriter, r 
 
 	}
 	return
+}
+
+func WtireR(w http.ResponseWriter, b []byte) (int, error) {
+	fmt.Println("我到了")
+	return WtireT(w, b)
+}
+
+func WtireT(w http.ResponseWriter, b []byte) (int, error) {
+	return 0, nil
 }

@@ -1,6 +1,9 @@
 package request
 
-import "github.com/HXSecurity/DongTai-agent-go/global"
+import (
+	"fmt"
+	"github.com/HXSecurity/DongTai-agent-go/global"
+)
 
 type AgentRegisterReq struct {
 	AutoCreateProject bool   `json:"autoCreateProject"`
@@ -153,8 +156,8 @@ func (p *PoolTree) FMT(pools *[]Pool, onlyKey int, goroutineIDs map[string]bool)
 	p.Pool.InvokeId = onlyKey
 	*pools = append(*pools, *p.Pool)
 	goroutineIDs[p.GoroutineID] = true
-	//fmt.Println(p.Pool.SourceValues, "=====>", p.Pool.TargetValues)
-	//fmt.Println(p.Pool.SourceHash, "===>", p.Pool.TargetHash)
+	fmt.Println(p.Pool.SourceValues, "=====>", p.Pool.TargetValues)
+	fmt.Println(p.Pool.SourceHash, "===>", p.Pool.TargetHash)
 	for k, v := range p.Children {
 		onlyKey += 1
 		global.PoolTreeMap.Delete(&v.Pool.TargetHash)

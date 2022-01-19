@@ -6,7 +6,6 @@ type HookFunc interface {
 	UnHook()
 }
 
-
 // 接口扩展时期示例  不影响原有功能
 type More interface {
 	HookFunc

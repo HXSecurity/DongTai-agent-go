@@ -11,7 +11,7 @@ func Cookie(req *http.Request, name string) (*http.Cookie, error) {
 	utils.FmtHookPool(request.PoolReq{
 		Args:            utils.Collect(name),
 		Reqs:            utils.Collect(cookie, err),
-		Source:          true,
+		Source:          false,
 		OriginClassName: "http.(*Request)",
 		MethodName:      "Cookie",
 		ClassName:       "http.(*Request)",

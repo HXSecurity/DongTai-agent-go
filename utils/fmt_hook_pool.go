@@ -23,9 +23,19 @@ func FmtHookPool(p request.PoolReq) request.Pool {
 		case string:
 			sourceHash = append(sourceHash, GetSource(v))
 			SourceValues = StringAdd(SourceValues, v.(string), " ")
+			break
 		case uintptr:
 			sourceHash = append(sourceHash, strconv.Itoa(int(v.(uintptr))))
 			SourceValues = StringAdd(SourceValues, strconv.Itoa(int(v.(uintptr))), " ")
+			break
+		default:
+			t := reflect.TypeOf(v)
+			value := reflect.ValueOf(v)
+			if t.Kind() == reflect.String {
+				sourceHash = append(sourceHash, GetSource(value.String()))
+				SourceValues = StringAdd(SourceValues, value.String(), " ")
+			}
+			break
 		}
 	}
 	var targetHash global.HashKeys = make(global.HashKeys, 0)
