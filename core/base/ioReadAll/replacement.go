@@ -1,7 +1,6 @@
 package ioReadAll
 
 import (
-	"fmt"
 	"github.com/HXSecurity/DongTai-agent-go/model/request"
 	"github.com/HXSecurity/DongTai-agent-go/utils"
 	"github.com/pkg/errors"
@@ -16,10 +15,6 @@ func ReadAll(r io.Reader) ([]byte, error) {
 	var u uintptr
 	value := reflect.ValueOf(b)
 	u = value.Pointer()
-	if v.Type().String() == "*http.body" {
-		fmt.Println(u, "in")
-		fmt.Println(string(b))
-	}
 	utils.FmtHookPool(request.PoolReq{
 		Args:            utils.Collect(r),
 		Reqs:            utils.Collect(b, e),
