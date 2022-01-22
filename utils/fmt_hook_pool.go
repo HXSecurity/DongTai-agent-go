@@ -11,9 +11,9 @@ func Collect(args ...interface{}) []interface{} {
 	return args
 }
 
-func FmtHookPool(p request.PoolReq) {
+func FmtHookPool(p request.PoolReq) request.Pool {
 	signature, callerClass, callerMethod, callerLineNumber := FmtStack()
-	var sourceHash global.HashKeys
+	var sourceHash global.HashKeys = make(global.HashKeys, 0)
 	var SourceValues string = ""
 	if len(p.NeedHook) == 0 {
 		RangeSource(p.Args, &p.NeedHook)
@@ -23,9 +23,19 @@ func FmtHookPool(p request.PoolReq) {
 		case string:
 			sourceHash = append(sourceHash, GetSource(v))
 			SourceValues = StringAdd(SourceValues, v.(string), " ")
+			break
 		case uintptr:
 			sourceHash = append(sourceHash, strconv.Itoa(int(v.(uintptr))))
 			SourceValues = StringAdd(SourceValues, strconv.Itoa(int(v.(uintptr))), " ")
+			break
+		default:
+			t := reflect.TypeOf(v)
+			value := reflect.ValueOf(v)
+			if t.Kind() == reflect.String {
+				sourceHash = append(sourceHash, GetSource(value.String()))
+				SourceValues = StringAdd(SourceValues, value.String(), " ")
+			}
+			break
 		}
 	}
 	var targetHash global.HashKeys = make(global.HashKeys, 0)
@@ -45,8 +55,8 @@ func FmtHookPool(p request.PoolReq) {
 			targetHash = append(targetHash, GetSource(v))
 			targetValues = StringAdd(targetValues, v.(string), " ")
 		case uintptr:
-			targetHash = append(sourceHash, strconv.Itoa(int(v.(uintptr))))
-			targetValues = StringAdd(SourceValues, strconv.Itoa(int(v.(uintptr))), " ")
+			targetHash = append(targetHash, strconv.Itoa(int(v.(uintptr))))
+			targetValues = StringAdd(targetValues, strconv.Itoa(int(v.(uintptr))), " ")
 		}
 	}
 	var ArgsStr string
@@ -92,4 +102,5 @@ func FmtHookPool(p request.PoolReq) {
 	} else {
 		global.PoolTreeMap.Store(&targetHash, &poolTree)
 	}
+	return pool
 }

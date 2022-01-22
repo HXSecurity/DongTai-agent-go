@@ -2,6 +2,7 @@ package utils
 
 import (
 	"encoding/json"
+	"reflect"
 	"strconv"
 	"unsafe"
 )
@@ -17,7 +18,10 @@ func Strval(value interface{}) string {
 	if value == nil {
 		return key
 	}
-
+	t := reflect.TypeOf(value)
+	if t.Name() == "HTML" {
+		return reflect.ValueOf(value).String()
+	}
 	switch value.(type) {
 	case float64:
 		ft := value.(float64)
@@ -63,7 +67,6 @@ func Strval(value interface{}) string {
 		newValue, _ := json.Marshal(value)
 		key = string(newValue)
 	}
-
 	return key
 }
 
