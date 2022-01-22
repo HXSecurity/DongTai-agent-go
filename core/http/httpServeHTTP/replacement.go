@@ -74,10 +74,18 @@ func MyServer(server *http.ServeMux, w http.ResponseWriter, r *http.Request) {
 				},
 			},
 		}
-		res, _ := global.ResponseMap.LoadAndDelete(id)
-		resBody := res.(string)
-		value2, _ := global.ResponseHeaderMap.LoadAndDelete(id)
-		resH := value2.(string)
+		var resBody string
+		var resH string
+		res, ok := global.ResponseMap.Load(id)
+		if ok {
+			global.ResponseMap.Delete(id)
+			resBody = res.(string)
+		}
+		value2, ok2 := global.ResponseHeaderMap.Load(id)
+		if ok2 {
+			global.ResponseHeaderMap.Delete(id)
+			resH = value2.(string)
+		}
 		for k, v := range w.Header() {
 			resH += k + ": " + strings.Join(v, ",") + "\n"
 		}
