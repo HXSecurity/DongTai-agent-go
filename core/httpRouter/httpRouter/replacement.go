@@ -80,12 +80,14 @@ func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *htt
 		}
 		var resBody string
 		var resH string
-		res, ok := global.ResponseMap.LoadAndDelete(id)
+		res, ok := global.ResponseMap.Load(id)
 		if ok {
+			global.ResponseMap.Delete(id)
 			resBody = res.(string)
 		}
-		value2, ok2 := global.ResponseHeaderMap.LoadAndDelete(id)
+		value2, ok2 := global.ResponseHeaderMap.Load(id)
 		if ok2 {
+			global.ResponseHeaderMap.Delete(id)
 			resH = value2.(string)
 		}
 		for k, v := range w.Header() {
