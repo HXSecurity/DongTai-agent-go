@@ -1,7 +1,6 @@
 package global
 
 import (
-	"github.com/HXSecurity/DongTai-agent-go/model/request"
 	"sync"
 )
 
@@ -19,8 +18,8 @@ func (h *HashKeys) Some(source []string) bool {
 }
 
 var (
-	AgentId     = 0
-	HookGroup   = make(map[string]*request.UploadReq)
-	PoolTreeMap = sync.Map{}
-	//PoolTreeMap = make(map[*HashKeys]*request.PoolTree)
+	AgentId           = 0
+	PoolTreeMap       = sync.Map{}
+	ResponseMap       = sync.Map{}
+	ResponseHeaderMap = sync.Map{}
 )

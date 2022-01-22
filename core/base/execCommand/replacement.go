@@ -1,15 +1,28 @@
 package execCommand
 
 import (
-	"fmt"
+	"github.com/HXSecurity/DongTai-agent-go/model/request"
+	"github.com/HXSecurity/DongTai-agent-go/utils"
 	"os/exec"
+	"reflect"
 )
 
 func Command(name string, arg ...string) *exec.Cmd {
-	fmt.Printf("Hook到了%s\n方法", "Command")
-	fmt.Printf("入参为%s,%s\n", name, arg)
 	e := CommandTemp(name, arg...)
-	fmt.Printf("返回值%s\n", e)
+	//
+	var u uintptr
+	value := reflect.ValueOf(e)
+	u = value.Pointer()
+	utils.FmtHookPool(request.PoolReq{
+		Args:            utils.Collect(name, arg),
+		Reqs:            utils.Collect(e),
+		NeedHook:        utils.Collect(name),
+		NeedCatch:       utils.Collect(u),
+		Source:          false,
+		OriginClassName: "exec",
+		MethodName:      "Command",
+		ClassName:       "exec",
+	})
 	return e
 }
 

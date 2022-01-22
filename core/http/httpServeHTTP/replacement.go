@@ -4,8 +4,6 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/base64"
-	"encoding/json"
-	"fmt"
 	"github.com/HXSecurity/DongTai-agent-go/api"
 	"github.com/HXSecurity/DongTai-agent-go/global"
 	"github.com/HXSecurity/DongTai-agent-go/model/request"
@@ -56,7 +54,7 @@ func MyServer(server *http.ServeMux, w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return
 		}
-		global.HookGroup[id] = &request.UploadReq{
+		HookGroup := &request.UploadReq{
 			Type:     36,
 			InvokeId: onlyKey,
 			Detail: request.Detail{
@@ -76,24 +74,35 @@ func MyServer(server *http.ServeMux, w http.ResponseWriter, r *http.Request) {
 				},
 			},
 		}
-		resH, err := json.Marshal(w.Header())
-		if err != nil {
-			fmt.Println(err)
-			return
+		var resBody string
+		var resH string
+		res, ok := global.ResponseMap.Load(id)
+		if ok {
+			global.ResponseMap.Delete(id)
+			resBody = res.(string)
 		}
-		resBody := string(reflect.ValueOf(w).Elem().FieldByName("w").Elem().FieldByName("buf").Bytes())
-		resHeader := base64.StdEncoding.EncodeToString(resH)
-		global.HookGroup[id].Detail.ResHeader = resHeader
-		global.HookGroup[id].Detail.ResBody = resBody
+		value2, ok2 := global.ResponseHeaderMap.Load(id)
+		if ok2 {
+			global.ResponseHeaderMap.Delete(id)
+			resH = value2.(string)
+		}
+		for k, v := range w.Header() {
+			resH += k + ": " + strings.Join(v, ",") + "\n"
+		}
+		resHeader := base64.StdEncoding.EncodeToString([]byte(resH))
+		HookGroup.Detail.ResHeader = resHeader
+		HookGroup.Detail.ResBody = resBody
 		goroutineIDs := make(map[string]bool)
 		global.PoolTreeMap.Range(func(key, value interface{}) bool {
 			if value.(*request.PoolTree).IsThisBegin(id) {
 				onlyKey += 1
-				value.(*request.PoolTree).FMT(&global.HookGroup[id].Detail.Function.Pool, onlyKey, goroutineIDs)
+				global.PoolTreeMap.Delete(key)
+				value.(*request.PoolTree).FMT(&HookGroup.Detail.Function.Pool, onlyKey, goroutineIDs)
+				return false
 			}
 			return true
 		})
-		api.ReportUpload(*global.HookGroup[id])
+		api.ReportUpload(*HookGroup)
 		utils.RunMapGCbYGoroutineID(goroutineIDs)
 	}()
 	return

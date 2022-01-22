@@ -9,7 +9,6 @@ import (
 	"github.com/HXSecurity/DongTai-agent-go/global"
 	"github.com/HXSecurity/DongTai-agent-go/utils"
 	"github.com/pkg/errors"
-	"github.com/rs/xid"
 	"os/exec"
 	"path/filepath"
 	"regexp"
@@ -35,8 +34,7 @@ func AgentRegister() (err error) {
 	if global.Config.DongtaiGoProjectVersion != "" {
 		projectName = global.Config.DongtaiGoProjectName
 	}
-	id := xid.New().String()
-	name := OS + "-" + hostname + "-" + version + "-" + id
+	name := OS + "-" + hostname + "-" + version
 	interfaces, err := net.Interfaces()
 	if err != nil {
 		return
