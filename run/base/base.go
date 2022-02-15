@@ -7,6 +7,8 @@ import (
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/execCommand"
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/fmtSprintf"
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/htmlTemplateExecuteTemplate"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/base/httpClientDo"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/base/httpNewRequest"
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/jsonDecoderDecode"
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/jsonNewDecoder"
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/jsonUnmarshal"
@@ -34,4 +36,7 @@ func init() {
 	hook.HookFunc("bufioWriterWriteString")
 	hook.HookFunc("runtimesSringtoslicebyte")
 	hook.HookFunc("htmlTemplateExecuteTemplate")
+	hook.HookFunc("httpClientDo")
+	hook.HookFunc("httpNewRequest")
+
 }

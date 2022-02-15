@@ -23,9 +23,8 @@ func InitViper() {
 	pflag.Bool("DongtaiGoProjectCreate", true, "Auto Create Project")
 	pflag.Parse()
 	FErr := v.BindPFlags(pflag.CommandLine)
-	if err != nil {
-		fmt.Println(FErr)
-		return
+	if FErr != nil {
+		fmt.Println("[waring]You may have used parameters other than Dongtai-GO-Agent. If it is a parameter carried by your system, please ignore this prompt.")
 	}
 	configErr := v.Unmarshal(&Config)
 	if err != nil {
