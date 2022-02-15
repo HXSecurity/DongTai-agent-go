@@ -1,9 +1,9 @@
 package model
 
 type Config struct {
-	DongtaiGoOpenapi        string
-	DongtaiGoToken          string
-	DongtaiGoProjectName    string
-	DongtaiGoProjectVersion string
-	DongtaiGoProjectCreate  bool
+	DongtaiGoOpenapi        string `yaml:"DongtaiGoOpenapi"`
+	DongtaiGoToken          string `yaml:"DongtaiGoToken"`
+	DongtaiGoProjectName    string `yaml:"DongtaiGoProjectName"`
+	DongtaiGoProjectVersion string `yaml:"DongtaiGoProjectVersion"`
+	DongtaiGoProjectCreate  bool   `yaml:"DongtaiGoProjectCreate"`
 }
