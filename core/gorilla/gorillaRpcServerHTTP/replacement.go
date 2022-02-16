@@ -1,15 +1,14 @@
-package httpRouter
+package gorillaRpcServerHTTP
 
 import (
 	"bufio"
 	"bytes"
 	"encoding/base64"
-	"fmt"
 	"github.com/HXSecurity/DongTai-agent-go/api"
 	"github.com/HXSecurity/DongTai-agent-go/global"
 	"github.com/HXSecurity/DongTai-agent-go/model/request"
 	"github.com/HXSecurity/DongTai-agent-go/utils"
-	"github.com/julienschmidt/httprouter"
+	"github.com/gorilla/rpc/v2"
 	"net/http"
 	"reflect"
 	"strconv"
@@ -17,20 +16,8 @@ import (
 	"time"
 )
 
-var MWrite func([]byte) (int, error)
-
-func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *http.Request) {
-
-	utils.FmtHookPool(request.PoolReq{
-		Args:            utils.Collect(r.Host),
-		Reqs:            utils.Collect(r.Host),
-		Source:          true,
-		OriginClassName: "httprouter.(*Router)",
-		MethodName:      "ServeHTTP",
-		ClassName:       "httprouter",
-	})
-
-	MyHttpRouterServerTemp(server, w, r)
+func MyServer(server *rpc.Server, w http.ResponseWriter, r *http.Request) {
+	MyServerTemp(server, w, r)
 	id := utils.CatGoroutineID()
 	go func() {
 		t := reflect.ValueOf(r.Body)
@@ -40,8 +27,13 @@ func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *htt
 			headerBase += k + ": " + strings.Join(v, ",") + "\n"
 		}
 		if t.Kind() == reflect.Ptr {
+
 			buf := t.
 				Elem().
+				FieldByName("ReadCloser").
+				Elem().Elem().
+				FieldByName("r").
+				Elem().Elem().
 				FieldByName("src").
 				Elem().Elem().
 				FieldByName("R").
@@ -122,18 +114,9 @@ func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *htt
 	return
 }
 
-func MyHttpRouterServerTemp(server *httprouter.Router, w http.ResponseWriter, r *http.Request) {
+func MyServerTemp(server *rpc.Server, w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < 100; i++ {
 
 	}
 	return
-}
-
-func WtireR(w http.ResponseWriter, b []byte) (int, error) {
-	fmt.Println("我到了")
-	return WtireT(w, b)
-}
-
-func WtireT(w http.ResponseWriter, b []byte) (int, error) {
-	return 0, nil
 }
