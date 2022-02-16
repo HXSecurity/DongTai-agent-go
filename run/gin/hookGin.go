@@ -12,7 +12,6 @@ import (
 	_ "github.com/HXSecurity/DongTai-agent-go/core/gin/ginEngineServerHTTP"
 	_ "github.com/HXSecurity/DongTai-agent-go/core/http/httpRequestCookie"
 	"github.com/HXSecurity/DongTai-agent-go/hook"
-	_ "github.com/HXSecurity/DongTai-agent-go/run/base"
 )
 
 func init() {

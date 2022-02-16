@@ -15,6 +15,8 @@ import (
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/runtimeConcatstrings"
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/runtimesSringtoslicebyte"
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/sqlDBQuery"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/base/stringsBuilderWriteString"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/base/urlescape"
 
 	"github.com/HXSecurity/DongTai-agent-go/global"
 	"github.com/HXSecurity/DongTai-agent-go/hook"
@@ -38,5 +40,7 @@ func init() {
 	hook.HookFunc("htmlTemplateExecuteTemplate")
 	hook.HookFunc("httpClientDo")
 	hook.HookFunc("httpNewRequest")
+	hook.HookFunc("urlescape")
+	hook.HookFunc("stringsBuilderWriteString")
 
 }
