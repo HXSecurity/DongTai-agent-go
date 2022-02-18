@@ -8,9 +8,9 @@ import (
 
 func Group(db *gorm.DB, value string) (tx *gorm.DB) {
 	s := GroupT(db, value)
-	utils.FmtHookPool(request.PoolReq{
-		Args:            utils.Collect(value),
-		Reqs:            utils.Collect(tx),
+	request.FmtHookPool(request.PoolReq{
+		Args:            request.Collect(value),
+		Reqs:            request.Collect(tx),
 		Source:          false,
 		OriginClassName: "gorm.(*DB)",
 		MethodName:      "Group",

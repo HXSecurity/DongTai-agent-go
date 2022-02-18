@@ -12,18 +12,16 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"reflect"
-	"strconv"
 	"strings"
-	"time"
 )
 
 var MWrite func([]byte) (int, error)
 
 func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *http.Request) {
 
-	utils.FmtHookPool(request.PoolReq{
-		Args:            utils.Collect(r.Host),
-		Reqs:            utils.Collect(r.Host),
+	request.FmtHookPool(request.PoolReq{
+		Args:            request.Collect(r.Host),
+		Reqs:            request.Collect(r.Host),
 		Source:          true,
 		OriginClassName: "httprouter.(*Router)",
 		MethodName:      "ServeHTTP",
@@ -64,10 +62,11 @@ func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *htt
 		if r.TLS != nil {
 			scheme = "https"
 		}
-		onlyKey, err := strconv.Atoi(strconv.Itoa(global.AgentId) + id + strconv.Itoa(int(time.Now().Unix())))
+		worker, err := utils.NewWorker(global.AgentId)
 		if err != nil {
-			return
+			fmt.Println(err)
 		}
+		onlyKey := int(worker.GetId())
 		HookGroup := &request.UploadReq{
 			Type:     36,
 			InvokeId: onlyKey,
@@ -109,15 +108,14 @@ func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *htt
 		goroutineIDs := make(map[string]bool)
 		global.PoolTreeMap.Range(func(key, value interface{}) bool {
 			if value.(*request.PoolTree).IsThisBegin(id) {
-				onlyKey += 1
 				global.PoolTreeMap.Delete(key)
-				value.(*request.PoolTree).FMT(&HookGroup.Detail.Function.Pool, onlyKey, goroutineIDs)
-				return false
+				value.(*request.PoolTree).FMT(&HookGroup.Detail.Function.Pool, worker, goroutineIDs)
+				return true
 			}
 			return true
 		})
 		api.ReportUpload(*HookGroup)
-		utils.RunMapGCbYGoroutineID(goroutineIDs)
+		request.RunMapGCbYGoroutineID(goroutineIDs)
 	}()
 	return
 }

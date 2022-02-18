@@ -8,9 +8,9 @@ import (
 
 func GetQueryArray(c *gin.Context, key string) ([]string, bool) {
 	reArray, flag := GetQueryArrayT(c, key)
-	utils.FmtHookPool(request.PoolReq{
-		Args:            utils.Collect(key),
-		Reqs:            utils.Collect(reArray),
+	request.FmtHookPool(request.PoolReq{
+		Args:            request.Collect(key),
+		Reqs:            request.Collect(reArray),
 		Source:          true,
 		OriginClassName: "gin.(*Context)",
 		MethodName:      "GetQueryArray",

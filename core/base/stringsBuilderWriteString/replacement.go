@@ -9,16 +9,23 @@ import (
 func WriteString(b *strings.Builder, s string) (n int, err error) {
 	argStr := b.String()
 	n, err = WriteStringT(b, s)
-	utils.FmtHookPool(request.PoolReq{
-		Args:            utils.Collect(argStr, s),
-		Reqs:            utils.Collect(b.String()),
-		NeedHook:        utils.Collect(argStr, s),
-		NeedCatch:       utils.Collect(b.String()),
-		Source:          false,
-		OriginClassName: "bytes.(*Buffer)",
-		MethodName:      "WriteString",
-		ClassName:       "bytes.(*Buffer)",
-	})
+	var WriteMap = make(map[string]bool)
+	WriteMap["strings.Join"] = true
+	WriteMap["strings.Replace"] = true
+	WriteMap["net/url.Values.Encode"] = true
+	WriteMap["net/url.(*URL).String"] = true
+	if !WriteMap[utils.LoadFunc(2)] {
+		request.FmtHookPool(request.PoolReq{
+			Args:            request.Collect(argStr, s),
+			Reqs:            request.Collect(b.String()),
+			NeedHook:        request.Collect(argStr, s),
+			NeedCatch:       request.Collect(b.String()),
+			Source:          false,
+			OriginClassName: "strings.(*Builder)",
+			MethodName:      "WriteString",
+			ClassName:       "strings.(*Builder)",
+		})
+	}
 	return n, err
 }
 
