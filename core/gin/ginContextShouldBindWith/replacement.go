@@ -9,9 +9,9 @@ import (
 
 func ShouldBindWith(c *gin.Context, obj interface{}, b binding.Binding) error {
 	err := ShouldBindWithT(c, obj, b)
-	utils.FmtHookPool(request.PoolReq{
-		Args:            utils.Collect(),
-		Reqs:            utils.Collect(obj),
+	request.FmtHookPool(request.PoolReq{
+		Args:            request.Collect(),
+		Reqs:            request.Collect(obj),
 		Source:          true,
 		OriginClassName: "gin.(*Context)",
 		MethodName:      "ShouldBindWith",

@@ -8,9 +8,9 @@ import (
 
 func Param(c *gin.Context, key string) string {
 	str := ParamT(c, key)
-	utils.FmtHookPool(request.PoolReq{
-		Args:            utils.Collect(key),
-		Reqs:            utils.Collect(str),
+	request.FmtHookPool(request.PoolReq{
+		Args:            request.Collect(key),
+		Reqs:            request.Collect(str),
 		Source:          true,
 		OriginClassName: "gin.(*Context)",
 		MethodName:      "Param",

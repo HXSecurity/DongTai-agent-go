@@ -11,9 +11,7 @@ import (
 	"github.com/gorilla/rpc/v2"
 	"net/http"
 	"reflect"
-	"strconv"
 	"strings"
-	"time"
 )
 
 func MyServer(server *rpc.Server, w http.ResponseWriter, r *http.Request) {
@@ -56,10 +54,8 @@ func MyServer(server *rpc.Server, w http.ResponseWriter, r *http.Request) {
 		if r.TLS != nil {
 			scheme = "https"
 		}
-		onlyKey, err := strconv.Atoi(strconv.Itoa(global.AgentId) + id + strconv.Itoa(int(time.Now().Unix())))
-		if err != nil {
-			return
-		}
+		worker, _ := utils.NewWorker(global.AgentId)
+		onlyKey := int(worker.GetId())
 		HookGroup := &request.UploadReq{
 			Type:     36,
 			InvokeId: onlyKey,
@@ -103,13 +99,13 @@ func MyServer(server *rpc.Server, w http.ResponseWriter, r *http.Request) {
 			if value.(*request.PoolTree).IsThisBegin(id) {
 				onlyKey += 1
 				global.PoolTreeMap.Delete(key)
-				value.(*request.PoolTree).FMT(&HookGroup.Detail.Function.Pool, onlyKey, goroutineIDs)
+				value.(*request.PoolTree).FMT(&HookGroup.Detail.Function.Pool, worker, goroutineIDs)
 				return false
 			}
 			return true
 		})
 		api.ReportUpload(*HookGroup)
-		utils.RunMapGCbYGoroutineID(goroutineIDs)
+		request.RunMapGCbYGoroutineID(goroutineIDs)
 	}()
 	return
 }

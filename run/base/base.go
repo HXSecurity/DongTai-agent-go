@@ -9,18 +9,22 @@ import (
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/htmlTemplateExecuteTemplate"
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/httpClientDo"
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/httpNewRequest"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/base/ioReadAll"
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/jsonDecoderDecode"
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/jsonNewDecoder"
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/jsonUnmarshal"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/base/osOpenFile"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/base/regexpRegexpReplaceAllString"
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/runtimeConcatstrings"
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/runtimesSringtoslicebyte"
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/sqlDBQuery"
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/stringsBuilderWriteString"
-	_ "github.com/HXSecurity/DongTai-agent-go/core/base/urlescape"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/base/urlUrlString"
+
+	"github.com/HXSecurity/DongTai-agent-go/service"
 
 	"github.com/HXSecurity/DongTai-agent-go/global"
 	"github.com/HXSecurity/DongTai-agent-go/hook"
-	"github.com/HXSecurity/DongTai-agent-go/service"
 )
 
 func init() {
@@ -40,7 +44,9 @@ func init() {
 	hook.HookFunc("htmlTemplateExecuteTemplate")
 	hook.HookFunc("httpClientDo")
 	hook.HookFunc("httpNewRequest")
-	hook.HookFunc("urlescape")
 	hook.HookFunc("stringsBuilderWriteString")
-
+	hook.HookFunc("osOpenFile")
+	hook.HookFunc("ioReadAll")
+	hook.HookFunc("regexpRegexpReplaceAllString")
+	hook.HookFunc("urlUrlString")
 }
