@@ -7,6 +7,12 @@ import (
 
 //此处为定义了Hook的注册方法和卸载方法
 
+type HookStruct interface {
+	GetHook() []string
+	HookAll()
+	UnHookAll()
+}
+
 func HookFunc(s string) {
 	if model.HookMap[s] == nil {
 		fmt.Println("尚未注册此HOOK:", s)
@@ -21,4 +27,50 @@ func UnHookFunc(s string) {
 	} else {
 		model.HookMap[s].UnHook()
 	}
+}
+
+func Hook(funcs []string) {
+	for i := range funcs {
+		HookFunc(funcs[i])
+	}
+}
+
+func UnHook(funcs []string) {
+	for i := range funcs {
+		UnHookFunc(funcs[i])
+	}
+}
+
+func HookAll(h ...HookStruct) {
+	for i := range h {
+		h[i].HookAll()
+	}
+}
+
+func UnHookAll(h ...HookStruct) {
+	for i := range h {
+		h[i].UnHookAll()
+	}
+}
+
+func RunAllHook() {
+	HookAll(
+		new(Base),
+		new(Gin),
+		new(Gorilla),
+		new(Gorm),
+		new(Http),
+		new(HttpRouter),
+	)
+}
+
+func StopAllHook() {
+	UnHookAll(
+		new(Base),
+		new(Gin),
+		new(Gorilla),
+		new(Gorm),
+		new(Http),
+		new(HttpRouter),
+	)
 }

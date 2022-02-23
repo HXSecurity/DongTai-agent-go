@@ -2,7 +2,6 @@ package execCmdRun
 
 import (
 	"github.com/HXSecurity/DongTai-agent-go/model/request"
-	"github.com/HXSecurity/DongTai-agent-go/utils"
 	"os/exec"
 	"reflect"
 )
@@ -13,10 +12,10 @@ func Run(cmd *exec.Cmd) error {
 	var u uintptr
 	value := reflect.ValueOf(cmd)
 	u = value.Pointer()
-	utils.FmtHookPool(request.PoolReq{
-		Args:            utils.Collect(cmd.Args),
-		Reqs:            utils.Collect(e),
-		NeedHook:        utils.Collect(u),
+	request.FmtHookPool(request.PoolReq{
+		Args:            request.Collect(cmd.Args),
+		Reqs:            request.Collect(e),
+		NeedHook:        request.Collect(u),
 		Source:          false,
 		OriginClassName: "exec.(*Cmd)",
 		MethodName:      "Run",

@@ -12,18 +12,9 @@ import (
 	_ "github.com/HXSecurity/DongTai-agent-go/core/gin/ginEngineServerHTTP"
 	_ "github.com/HXSecurity/DongTai-agent-go/core/http/httpRequestCookie"
 	"github.com/HXSecurity/DongTai-agent-go/hook"
-	_ "github.com/HXSecurity/DongTai-agent-go/run/base"
 )
 
 func init() {
-	hook.HookFunc("ginEngineServerHTTP")
-	hook.HookFunc("ginContextShouldBindWith")
-	hook.HookFunc("ginContextShouldBindUri")
-	hook.HookFunc("ginContextShouldBindBodyWith")
-	hook.HookFunc("ginContextParam")
-	hook.HookFunc("ginContextGetQueryMap")
-	hook.HookFunc("ginContextGetQueryArray")
-	hook.HookFunc("ginContextGetPostFormMap")
-	hook.HookFunc("ginContextGetPostFormArray")
-	hook.HookFunc("httpRequestCookie")
+	g := new(hook.Gin)
+	g.HookAll()
 }

@@ -2,7 +2,6 @@ package execCommand
 
 import (
 	"github.com/HXSecurity/DongTai-agent-go/model/request"
-	"github.com/HXSecurity/DongTai-agent-go/utils"
 	"os/exec"
 	"reflect"
 )
@@ -13,11 +12,11 @@ func Command(name string, arg ...string) *exec.Cmd {
 	var u uintptr
 	value := reflect.ValueOf(e)
 	u = value.Pointer()
-	utils.FmtHookPool(request.PoolReq{
-		Args:            utils.Collect(name, arg),
-		Reqs:            utils.Collect(e),
-		NeedHook:        utils.Collect(name),
-		NeedCatch:       utils.Collect(u),
+	request.FmtHookPool(request.PoolReq{
+		Args:            request.Collect(name, arg),
+		Reqs:            request.Collect(e),
+		NeedHook:        request.Collect(name),
+		NeedCatch:       request.Collect(u),
 		Source:          false,
 		OriginClassName: "exec",
 		MethodName:      "Command",

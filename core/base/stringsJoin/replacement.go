@@ -1,6 +1,8 @@
 package stringsJoin
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func Join(elems []string, sep string) string {
 	fmt.Println("hook到方法fmt.Sprintf")

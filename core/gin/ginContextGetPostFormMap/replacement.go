@@ -8,9 +8,9 @@ import (
 
 func GetPostFormMap(c *gin.Context, key string) (map[string]string, bool) {
 	reMap, flag := GetPostFormMapT(c, key)
-	utils.FmtHookPool(request.PoolReq{
-		Args:            utils.Collect(key),
-		Reqs:            utils.Collect(reMap),
+	request.FmtHookPool(request.PoolReq{
+		Args:            request.Collect(key),
+		Reqs:            request.Collect(reMap),
 		Source:          true,
 		OriginClassName: "gin.(*Context)",
 		MethodName:      "GetPostFormMap",

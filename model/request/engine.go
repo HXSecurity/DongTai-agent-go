@@ -3,6 +3,9 @@ package request
 import (
 	"fmt"
 	"github.com/HXSecurity/DongTai-agent-go/global"
+	"github.com/HXSecurity/DongTai-agent-go/utils"
+	"reflect"
+	"strconv"
 )
 
 type AgentRegisterReq struct {
@@ -152,15 +155,124 @@ func (p *PoolTree) IsThisBegin(GoroutineID string) bool {
 	return GoroutineID == p.GoroutineID && p.Begin
 }
 
-func (p *PoolTree) FMT(pools *[]Pool, onlyKey int, goroutineIDs map[string]bool) {
-	p.Pool.InvokeId = onlyKey
+func (p *PoolTree) FMT(pools *[]Pool, w *utils.Worker, goroutineIDs map[string]bool) {
+	p.Pool.InvokeId = int(w.GetId())
 	*pools = append(*pools, *p.Pool)
 	goroutineIDs[p.GoroutineID] = true
-	fmt.Println(p.Pool.SourceValues, "=====>", p.Pool.TargetValues)
+	fmt.Println(p.Pool.ClassName, p.Pool.MethodName)
+	fmt.Println(p.Pool.SourceValues, "====>", p.Pool.TargetValues)
 	fmt.Println(p.Pool.SourceHash, "===>", p.Pool.TargetHash)
 	for k, v := range p.Children {
-		onlyKey += 1
 		global.PoolTreeMap.Delete(&v.Pool.TargetHash)
-		p.Children[k].FMT(pools, onlyKey, goroutineIDs)
+		p.Children[k].FMT(pools, w, goroutineIDs)
 	}
+}
+
+func Collect(args ...interface{}) []interface{} {
+	return args
+}
+
+func FmtHookPool(p PoolReq) Pool {
+	signature, callerClass, callerMethod, callerLineNumber := utils.FmtStack()
+	var sourceHash global.HashKeys = make(global.HashKeys, 0)
+	var SourceValues string = ""
+	if len(p.NeedHook) == 0 {
+		utils.RangeSource(p.Args, &p.NeedHook)
+	}
+	for _, v := range p.NeedHook {
+		switch v.(type) {
+		case string:
+			sourceHash = append(sourceHash, utils.GetSource(v))
+			SourceValues = utils.StringAdd(SourceValues, v.(string), " ")
+			break
+		case uintptr:
+			sourceHash = append(sourceHash, strconv.Itoa(int(v.(uintptr))))
+			SourceValues = utils.StringAdd(SourceValues, strconv.Itoa(int(v.(uintptr))), " ")
+			break
+		default:
+			t := reflect.TypeOf(v)
+			value := reflect.ValueOf(v)
+			if t.Kind() == reflect.String {
+				sourceHash = append(sourceHash, utils.GetSource(value.String()))
+				SourceValues = utils.StringAdd(SourceValues, value.String(), " ")
+			}
+			break
+		}
+	}
+	var targetHash global.HashKeys = make(global.HashKeys, 0)
+	var targetValues string = ""
+	var RetClassNames string = ""
+	if len(p.NeedCatch) == 0 {
+		utils.RangeSource(p.Reqs, &p.NeedCatch)
+	}
+	for _, v := range p.Reqs {
+		if reflect.ValueOf(v).IsValid() {
+			RetClassNames = utils.StringAdd(RetClassNames, reflect.ValueOf(v).Type().String(), " ")
+		}
+	}
+	for _, v := range p.NeedCatch {
+		switch v.(type) {
+		case string:
+			targetHash = append(targetHash, utils.GetSource(v))
+			targetValues = utils.StringAdd(targetValues, v.(string), " ")
+		case uintptr:
+			targetHash = append(targetHash, strconv.Itoa(int(v.(uintptr))))
+			targetValues = utils.StringAdd(targetValues, strconv.Itoa(int(v.(uintptr))), " ")
+		}
+	}
+	var ArgsStr string
+	if p.ArgsStr != "" {
+		ArgsStr = p.ArgsStr
+	} else {
+		ArgsStr = utils.Strval(p.Args)
+	}
+	var pool = Pool{
+		Source:           p.Source,
+		Interfaces:       []interface{}{},
+		SourceValues:     SourceValues,
+		SourceHash:       sourceHash,
+		TargetValues:     targetValues,
+		TargetHash:       targetHash,
+		Signature:        signature,
+		OriginClassName:  p.OriginClassName,
+		MethodName:       p.MethodName,
+		ClassName:        p.ClassName,
+		CallerLineNumber: callerLineNumber,
+		CallerClass:      callerClass,
+		CallerMethod:     callerMethod,
+		RetClassName:     RetClassNames,
+		Args:             ArgsStr,
+	}
+
+	poolTree := PoolTree{
+		Begin:       p.Source,
+		Pool:        &pool,
+		Children:    []*PoolTree{},
+		GoroutineID: utils.CatGoroutineID(),
+	}
+
+	if !p.Source {
+		global.PoolTreeMap.Range(func(key, value interface{}) bool {
+			if key.(*global.HashKeys).Some(sourceHash) {
+				poolTree.GoroutineID = value.(*PoolTree).GoroutineID
+				value.(*PoolTree).Children = append(value.(*PoolTree).Children, &poolTree)
+				global.PoolTreeMap.Store(&targetHash, &poolTree)
+			}
+			return true
+		})
+	} else {
+		global.PoolTreeMap.Store(&targetHash, &poolTree)
+	}
+	return pool
+}
+
+func RunMapGCbYGoroutineID(goroutineIDs map[string]bool) {
+	global.PoolTreeMap.Range(func(key, value interface{}) bool {
+		for id, _ := range goroutineIDs {
+			if value.(*PoolTree).GoroutineID == id {
+				global.PoolTreeMap.Delete(key)
+			}
+		}
+		return true
+	})
 }

@@ -2,15 +2,14 @@ package urlURLQuery
 
 import (
 	"github.com/HXSecurity/DongTai-agent-go/model/request"
-	"github.com/HXSecurity/DongTai-agent-go/utils"
 	"net/url"
 )
 
 func Query(URL *url.URL) url.Values {
 	values := QueryT(URL)
-	utils.FmtHookPool(request.PoolReq{
-		Args:            utils.Collect(),
-		Reqs:            utils.Collect(values),
+	request.FmtHookPool(request.PoolReq{
+		Args:            request.Collect(),
+		Reqs:            request.Collect(values),
 		Source:          true,
 		OriginClassName: "url.(*URL)",
 		MethodName:      "Query",

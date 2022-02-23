@@ -8,9 +8,9 @@ import (
 
 func GetPostFormArray(c *gin.Context, key string) ([]string, bool) {
 	reArray, flag := GetPostFormArrayT(c, key)
-	utils.FmtHookPool(request.PoolReq{
-		Args:            utils.Collect(key),
-		Reqs:            utils.Collect(reArray),
+	request.FmtHookPool(request.PoolReq{
+		Args:            request.Collect(key),
+		Reqs:            request.Collect(reArray),
 		Source:          true,
 		OriginClassName: "gin.(*Context)",
 		MethodName:      "GetPostFormArray",

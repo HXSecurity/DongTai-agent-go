@@ -16,11 +16,11 @@ func WriteString(b *bufio.Writer, v string) (n int, err error) {
 			global.ResponseHeaderMap.Store(utils.CatGoroutineID(), string(v))
 		}
 	}
-	//utils.FmtHookPool(request.PoolReq{
-	//	Args:            utils.Collect(argStr, s),
-	//	Reqs:            utils.Collect(b.String()),
-	//	NeedHook:        utils.Collect(argStr, s),
-	//	NeedCatch:       utils.Collect(b.String()),
+	//request.FmtHookPool(request.PoolReq{
+	//	Args:            request.Collect(argStr, s),
+	//	Reqs:            request.Collect(b.String()),
+	//	NeedHook:        request.Collect(argStr, s),
+	//	NeedCatch:       request.Collect(b.String()),
 	//	Source:          false,
 	//	OriginClassName: "bytes.(*Buffer)",
 	//	MethodName:      "WriteString",

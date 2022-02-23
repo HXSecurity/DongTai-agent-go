@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"github.com/HXSecurity/DongTai-agent-go/model"
 	"github.com/HXSecurity/DongTai-agent-go/model/request"
-	"github.com/HXSecurity/DongTai-agent-go/utils"
 	"io"
 	"reflect"
 )
@@ -15,10 +14,10 @@ func NewDecoder(r io.Reader) *json.Decoder {
 	var u uintptr
 	value := reflect.ValueOf(d)
 	u = value.Pointer()
-	utils.FmtHookPool(request.PoolReq{
-		Args:            utils.Collect(r),
-		Reqs:            utils.Collect(d),
-		NeedCatch:       utils.Collect(u),
+	request.FmtHookPool(request.PoolReq{
+		Args:            request.Collect(r),
+		Reqs:            request.Collect(d),
+		NeedCatch:       request.Collect(u),
 		Source:          v.Type().String() == "*http.body" && model.HookMap["ginEngineServerHTTP"] == nil,
 		OriginClassName: "json",
 		MethodName:      "NewDecoder",
