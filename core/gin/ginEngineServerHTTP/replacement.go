@@ -49,7 +49,7 @@ func MyServer(server *gin.Engine, w http.ResponseWriter, r *http.Request) {
 		if r.TLS != nil {
 			scheme = "https"
 		}
-		worker, _ := utils.NewWorker(1, global.AgentId)
+		worker, _ := utils.NewWorker(global.AgentId)
 		onlyKey := int(worker.GetId())
 		HookGroup := &request.UploadReq{
 			Type:     36,
