@@ -7,6 +7,15 @@ import (
 	"unsafe"
 )
 
+func LoadFunc(skip int) string {
+	pc, _, _, ok := runtime.Caller(skip)
+	if ok {
+		f := runtime.FuncForPC(pc)
+		return f.Name()
+	}
+	return ""
+}
+
 func IsHook(string2 string, line int) (flag bool) {
 	l := 1 << 10
 	buf := make([]byte, l)

@@ -2,7 +2,6 @@ package httpNewRequest
 
 import (
 	"github.com/HXSecurity/DongTai-agent-go/model/request"
-	"github.com/HXSecurity/DongTai-agent-go/utils"
 	"io"
 	"net/http"
 	"reflect"
@@ -13,10 +12,10 @@ func NewRequest(method, url string, body io.Reader) (*http.Request, error) {
 	var u uintptr
 	value := reflect.ValueOf(req)
 	u = value.Pointer()
-	utils.FmtHookPool(request.PoolReq{
-		Args:            utils.Collect(method, url, body),
-		Reqs:            utils.Collect(req, err),
-		NeedCatch:       utils.Collect(u),
+	request.FmtHookPool(request.PoolReq{
+		Args:            request.Collect(method, url, body),
+		Reqs:            request.Collect(req, err),
+		NeedCatch:       request.Collect(u),
 		Source:          false,
 		OriginClassName: "http",
 		MethodName:      "NewRequest",

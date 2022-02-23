@@ -2,7 +2,6 @@ package runtimesSringtoslicebyte
 
 import (
 	"github.com/HXSecurity/DongTai-agent-go/model/request"
-	"github.com/HXSecurity/DongTai-agent-go/utils"
 	"reflect"
 	_ "unsafe"
 )
@@ -20,17 +19,15 @@ func stringtoslicebyteR(buf *tmpBuf, s string) []byte {
 	var u uintptr
 	value := reflect.ValueOf(b)
 	u = value.Pointer()
-
-	utils.FmtHookPool(request.PoolReq{
-		Args:            utils.Collect(s),
-		Reqs:            utils.Collect(b),
-		NeedCatch:       utils.Collect(u),
+	request.FmtHookPool(request.PoolReq{
+		Args:            request.Collect(s),
+		Reqs:            request.Collect(b),
+		NeedCatch:       request.Collect(u),
 		Source:          false,
 		OriginClassName: "runtime",
 		MethodName:      "stringtoslicebyte",
 		ClassName:       "runtime",
 	})
-
 	return b
 }
 

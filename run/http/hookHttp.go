@@ -9,5 +9,6 @@ import (
 )
 
 func init() {
-	hook.HookFunc("httpServeHTTP")
+	h := new(hook.Http)
+	h.HookAll()
 }

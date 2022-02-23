@@ -8,9 +8,9 @@ import (
 
 func Select(db *gorm.DB, query interface{}, args ...interface{}) (tx *gorm.DB) {
 	s := SelectT(db, query, args...)
-	utils.FmtHookPool(request.PoolReq{
-		Args:            utils.Collect(query, args),
-		Reqs:            utils.Collect(tx),
+	request.FmtHookPool(request.PoolReq{
+		Args:            request.Collect(query, args),
+		Reqs:            request.Collect(tx),
 		Source:          false,
 		OriginClassName: "gorm.(*DB)",
 		MethodName:      "Select",

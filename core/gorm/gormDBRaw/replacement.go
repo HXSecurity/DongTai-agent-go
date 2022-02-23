@@ -8,9 +8,9 @@ import (
 
 func Raw(db *gorm.DB, sql string, values ...interface{}) (tx *gorm.DB) {
 	s := RawT(db, sql, values...)
-	utils.FmtHookPool(request.PoolReq{
-		Args:            utils.Collect(sql, values),
-		Reqs:            utils.Collect(tx),
+	request.FmtHookPool(request.PoolReq{
+		Args:            request.Collect(sql, values),
+		Reqs:            request.Collect(tx),
 		Source:          false,
 		OriginClassName: "gorm.(*DB)",
 		MethodName:      "Raw",

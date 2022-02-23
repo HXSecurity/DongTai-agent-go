@@ -9,9 +9,9 @@ import (
 func Order(db *gorm.DB, value interface{}) (tx *gorm.DB) {
 
 	s := OrderT(db, value)
-	utils.FmtHookPool(request.PoolReq{
-		Args:            utils.Collect(value),
-		Reqs:            utils.Collect(tx),
+	request.FmtHookPool(request.PoolReq{
+		Args:            request.Collect(value),
+		Reqs:            request.Collect(tx),
 		Source:          false,
 		OriginClassName: "gorm.(*DB)",
 		MethodName:      "Order",
