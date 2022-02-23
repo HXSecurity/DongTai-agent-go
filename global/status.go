@@ -22,5 +22,4 @@ var (
 	PoolTreeMap       = sync.Map{}
 	ResponseMap       = sync.Map{}
 	ResponseHeaderMap = sync.Map{}
-	InvokeMap         = sync.Map{}
 )

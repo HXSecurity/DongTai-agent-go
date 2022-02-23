@@ -1,4 +1,4 @@
-package gin
+package gorm
 
 import (
 	_ "github.com/HXSecurity/DongTai-agent-go/core/gorm/gormDBExec"
@@ -12,11 +12,6 @@ import (
 )
 
 func init() {
-	hook.HookFunc("gormDBOrder")
-	hook.HookFunc("gormDBExec")
-	hook.HookFunc("gormDBGroup")
-	hook.HookFunc("gormDBHaving")
-	hook.HookFunc("gormDBPluck")
-	hook.HookFunc("gormDBRaw")
-	hook.HookFunc("gormDBSelect")
+	g := new(hook.Gorm)
+	g.HookAll()
 }
