@@ -6,5 +6,6 @@ import (
 )
 
 func init() {
-	hook.HookFunc("gorillaRpcServerHTTP")
+	g := new(hook.Gorilla)
+	g.HookAll()
 }

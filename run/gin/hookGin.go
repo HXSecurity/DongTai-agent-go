@@ -15,14 +15,6 @@ import (
 )
 
 func init() {
-	hook.HookFunc("ginEngineServerHTTP")
-	hook.HookFunc("ginContextShouldBindWith")
-	hook.HookFunc("ginContextShouldBindUri")
-	hook.HookFunc("ginContextShouldBindBodyWith")
-	hook.HookFunc("ginContextParam")
-	hook.HookFunc("ginContextGetQueryMap")
-	hook.HookFunc("ginContextGetQueryArray")
-	hook.HookFunc("ginContextGetPostFormMap")
-	hook.HookFunc("ginContextGetPostFormArray")
-	hook.HookFunc("httpRequestCookie")
+	g := new(hook.Gin)
+	g.HookAll()
 }

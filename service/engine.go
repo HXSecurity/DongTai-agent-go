@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/HXSecurity/DongTai-agent-go/api"
 	"github.com/HXSecurity/DongTai-agent-go/global"
+	"github.com/HXSecurity/DongTai-agent-go/hook"
 	"github.com/HXSecurity/DongTai-agent-go/utils"
 	"github.com/pkg/errors"
 	"os/exec"
@@ -23,7 +24,50 @@ import (
 	"runtime"
 )
 
+var live bool
+
+func CreateCircuitBreaker() func() (err error) {
+	var count int
+	var circuit bool
+	return func() (err error) {
+		s, err := getServerInfo()
+		var cpuNum float64
+		cpus := s.Cpu.Cpus
+		for _, k := range cpus {
+			cpuNum += k
+		}
+		cpu := cpuNum / float64(len(cpus))
+		fmt.Println(cpu)
+		if cpu > 80 {
+			if count >= 5 {
+				fmt.Println("熔断")
+				circuit = true
+				count = 0
+				StopAgent()
+				return
+			}
+			count++
+		}
+		if cpu <= 80 && circuit {
+			count = 0
+			RunAgent()
+		}
+		return nil
+	}
+}
+
+func StopAgent() {
+	live = false
+	hook.RunAllHook()
+}
+
+func RunAgent() {
+	live = true
+	hook.StopAllHook()
+}
+
 func AgentRegister() (err error) {
+	live = true
 	OS := runtime.GOOS
 	hostname, _ := os.Hostname()
 	version := "1.0.0"
@@ -150,8 +194,10 @@ func AgentRegister() (err error) {
 						global.AgentId = agentId
 						go func() {
 							for {
-								time.Sleep(5 * time.Second)
-								PingPang()
+								if live {
+									time.Sleep(5 * time.Second)
+									PingPang()
+								}
 							}
 						}()
 						break
@@ -232,8 +278,4 @@ func getServerInfo() (server *utils.Server, err error) {
 	}
 
 	return &s, nil
-}
-
-func UploadMethodCall(interface{}) {
-
 }

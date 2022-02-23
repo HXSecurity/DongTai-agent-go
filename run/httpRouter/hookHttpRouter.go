@@ -10,8 +10,6 @@ import (
 )
 
 func init() {
-	hook.HookFunc("httpRouter")
-	hook.HookFunc("httpRequestFormValue")
-	hook.HookFunc("httpRequestCookie")
-	hook.HookFunc("urlURLQuery")
+	h := new(hook.HttpRouter)
+	h.HookAll()
 }
