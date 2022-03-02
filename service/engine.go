@@ -30,6 +30,13 @@ func CreateCircuitBreaker() func() (err error) {
 	var count int
 	var circuit bool
 	return func() (err error) {
+		limit := api.Limit()
+		cpuLimit, ferr := strconv.ParseFloat(limit["cpu_limit"], 32)
+		if ferr != nil {
+			cpuLimit = 100
+			return
+		}
+		cpuLimit = 5
 		s, err := getServerInfo()
 		var cpuNum float64
 		cpus := s.Cpu.Cpus
@@ -38,9 +45,9 @@ func CreateCircuitBreaker() func() (err error) {
 		}
 		cpu := cpuNum / float64(len(cpus))
 		fmt.Println(cpu)
-		if cpu > 80 {
+		if cpu > cpuLimit {
+			fmt.Println(count)
 			if count >= 5 {
-				fmt.Println("熔断")
 				circuit = true
 				count = 0
 				StopAgent()
@@ -48,9 +55,11 @@ func CreateCircuitBreaker() func() (err error) {
 			}
 			count++
 		}
-		if cpu <= 80 && circuit {
+		if cpu <= cpuLimit {
 			count = 0
-			RunAgent()
+			if circuit {
+				RunAgent()
+			}
 		}
 		return nil
 	}
@@ -58,15 +67,16 @@ func CreateCircuitBreaker() func() (err error) {
 
 func StopAgent() {
 	live = false
-	hook.RunAllHook()
+	hook.HookAll(global.AllHooks...)
 }
 
 func RunAgent() {
 	live = true
-	hook.StopAllHook()
+	hook.UnHookAll(global.AllHooks...)
 }
 
 func AgentRegister() (err error) {
+	breaker := CreateCircuitBreaker()
 	live = true
 	OS := runtime.GOOS
 	hostname, _ := os.Hostname()
@@ -197,6 +207,7 @@ func AgentRegister() (err error) {
 								if live {
 									time.Sleep(5 * time.Second)
 									PingPang()
+									breaker()
 								}
 							}
 						}()

@@ -39,6 +39,27 @@ func AgentRegister(req request.AgentRegisterReq) (AgentId int, err error) {
 	return 0, errors.New("状态码为" + resp.Status)
 }
 
+func Limit() map[string]string {
+	var limit = make(map[string]string)
+	resp, body, errs := GET("/api/v1/agent/limit", nil).End()
+	if len(errs) > 0 {
+		for _, v := range errs {
+			fmt.Println(v)
+		}
+	}
+	if resp.StatusCode == 200 {
+		var res response.LimitRes
+		err := json.Unmarshal([]byte(body), &res)
+		if err != nil {
+			fmt.Println(err)
+		}
+		for _, item := range res.Data {
+			limit[item.Key] = item.Value
+		}
+	}
+	return limit
+}
+
 /*	Profiles
 	Engine 运行时，从 OpenAPI 服务获取Hook规则
 */
