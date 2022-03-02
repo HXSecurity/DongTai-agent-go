@@ -14,3 +14,9 @@ type More interface {
 
 //实现一个方法调用的接口集合 用于对各类hook的统一map管理 动态挂载卸载
 var HookMap = make(map[string]HookFunc)
+
+type HookStruct interface {
+	GetHook() []string
+	HookAll()
+	UnHookAll()
+}
