@@ -12,3 +12,12 @@ type AgentRegisterRes struct {
 		CoreAutoStart int `json:"coreAutoStart"`
 	} `json:"data"`
 }
+
+type LimitRes struct {
+	ResBase
+	Data []struct {
+		Id    int    `json:"id"`
+		Key   string `json:"key"`
+		Value string `json:"value"`
+	} `json:"data"`
+}

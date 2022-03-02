@@ -1,6 +1,7 @@
 package global
 
 import (
+	"github.com/HXSecurity/DongTai-agent-go/model"
 	"sync"
 )
 
@@ -18,6 +19,7 @@ func (h *HashKeys) Some(source []string) bool {
 }
 
 var (
+	AllHooks          []model.HookStruct
 	AgentId           = 0
 	PoolTreeMap       = sync.Map{}
 	ResponseMap       = sync.Map{}

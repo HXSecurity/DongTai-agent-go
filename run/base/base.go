@@ -28,6 +28,7 @@ import (
 
 func init() {
 	b := new(hook.Base)
+	global.AllHooks = append(global.AllHooks, b)
 	global.InitViper()
 	_ = service.AgentRegister()
 	b.HookAll()

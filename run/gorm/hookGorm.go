@@ -8,10 +8,12 @@ import (
 	_ "github.com/HXSecurity/DongTai-agent-go/core/gorm/gormDBPluck"
 	_ "github.com/HXSecurity/DongTai-agent-go/core/gorm/gormDBRaw"
 	_ "github.com/HXSecurity/DongTai-agent-go/core/gorm/gormDBSelect"
+	"github.com/HXSecurity/DongTai-agent-go/global"
 	"github.com/HXSecurity/DongTai-agent-go/hook"
 )
 
 func init() {
 	g := new(hook.Gorm)
+	global.AllHooks = append(global.AllHooks, g)
 	g.HookAll()
 }
