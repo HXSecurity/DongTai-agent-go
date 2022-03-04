@@ -32,11 +32,10 @@ func CreateCircuitBreaker() func() (err error) {
 	return func() (err error) {
 		limit := api.Limit()
 		cpuLimit, ferr := strconv.ParseFloat(limit["cpu_limit"], 32)
-		if ferr != nil {
+		if ferr != nil || cpuLimit == 0 {
 			cpuLimit = 100
 			return
 		}
-		cpuLimit = 5
 		s, err := getServerInfo()
 		var cpuNum float64
 		cpus := s.Cpu.Cpus
