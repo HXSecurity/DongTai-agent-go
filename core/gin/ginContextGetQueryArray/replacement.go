@@ -2,7 +2,6 @@ package ginContextGetQueryArray
 
 import (
 	"github.com/HXSecurity/DongTai-agent-go/model/request"
-	"github.com/HXSecurity/DongTai-agent-go/utils"
 	"github.com/gin-gonic/gin"
 )
 
