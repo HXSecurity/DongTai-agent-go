@@ -43,9 +43,7 @@ func CreateCircuitBreaker() func() (err error) {
 			cpuNum += k
 		}
 		cpu := cpuNum / float64(len(cpus))
-		fmt.Println(cpu)
 		if cpu > cpuLimit {
-			fmt.Println(count)
 			if count >= 5 {
 				circuit = true
 				count = 0
@@ -157,7 +155,6 @@ func AgentRegister() (err error) {
 			var cmd *exec.Cmd
 			var strErr bytes.Buffer
 			var out bytes.Buffer
-			fmt.Println(req.Pid)
 			if OS == "windows" {
 				cmd = exec.Command("netstat", "-ano")
 				cmd.Stderr = &strErr
