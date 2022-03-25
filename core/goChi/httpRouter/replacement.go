@@ -9,24 +9,23 @@ import (
 	"github.com/HXSecurity/DongTai-agent-go/global"
 	"github.com/HXSecurity/DongTai-agent-go/model/request"
 	"github.com/HXSecurity/DongTai-agent-go/utils"
-	"github.com/julienschmidt/httprouter"
+	"github.com/go-chi/chi/v5"
 	"net/http"
 	"reflect"
 	"strings"
 )
 
-func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *http.Request) {
-
+func ChiRouterServer(server *chi.Mux, w http.ResponseWriter, r *http.Request) {
 	request.FmtHookPool(request.PoolReq{
 		Args:            request.Collect(r.Host),
 		Reqs:            request.Collect(r.Host),
 		Source:          true,
-		OriginClassName: "httprouter.(*Router)",
+		OriginClassName: "chi.(*Mux)",
 		MethodName:      "ServeHTTP",
-		ClassName:       "httprouter",
+		ClassName:       "chi",
 	})
 
-	MyHttpRouterServerTemp(server, w, r)
+	ChiRouterServerTemp(server, w, r)
 	id := utils.CatGoroutineID()
 	go func() {
 		t := reflect.ValueOf(r.Body)
@@ -118,7 +117,7 @@ func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *htt
 	return
 }
 
-func MyHttpRouterServerTemp(server *httprouter.Router, w http.ResponseWriter, r *http.Request) {
+func ChiRouterServerTemp(server *chi.Mux, w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < 100; i++ {
 
 	}

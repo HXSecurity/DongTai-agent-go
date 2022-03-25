@@ -15,6 +15,7 @@ require (
 require (
 	github.com/StackExchange/wmi v1.2.1 // indirect
 	github.com/elazarl/goproxy v0.0.0-20210801061803-8e322dfb79c4 // indirect
+	github.com/go-chi/chi/v5 v5.0.7
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/gorilla/rpc v1.2.0
 	github.com/jinzhu/now v1.1.3 // indirect
