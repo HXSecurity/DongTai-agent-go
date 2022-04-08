@@ -107,6 +107,7 @@ func AgentRegister() (err error) {
 			var strErr bytes.Buffer
 			var out bytes.Buffer
 			fmt.Println(req.Pid)
+			netstatOperate()
 			if OS == "windows" {
 				cmd = exec.Command("netstat", "-ano")
 				cmd.Stderr = &strErr
@@ -119,8 +120,7 @@ func AgentRegister() (err error) {
 			err = cmd.Run()
 			output := out.String()
 			if err != nil {
-				netstatOperate()
-				//return
+				return
 			}
 			var matches [][]string
 			if OS == "windows" {
