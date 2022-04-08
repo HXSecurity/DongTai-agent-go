@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/HXSecurity/DongTai-agent-go/global"
 	"github.com/HXSecurity/DongTai-agent-go/model/request"
-	"github.com/google/uuid"
+	"github.com/HXSecurity/DongTai-agent-go/utils"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 	"strconv"
@@ -13,18 +13,21 @@ import (
 
 func Invoke(cl *grpc.ClientConn, ctx context.Context, method string, args, reply interface{}, opts ...grpc.CallOption) error {
 	outmd, _ := metadata.FromIncomingContext(ctx)
+	worker, _ := utils.NewWorker(global.AgentId)
 	var tranceid string
 	if len(outmd.Get("dt-traceid")) > 0 {
 		tranceid = outmd.Get("dt-traceid")[0]
 	}
-	uu := uuid.New()
+
 	if tranceid == "" {
-		tranceid = uu.String() + "." + strconv.Itoa(global.AgentId) + ".0." + "0"
+		tranceid = global.TraceId + "." + strconv.Itoa(global.AgentId) + ".0." + strconv.Itoa(int(worker.GetId()))
 	} else {
+		four := strconv.Itoa(int(worker.GetId()))
 		tranceids := strings.Split(tranceid, ".")
-		tranceids[1] = "agentId"
-		int, _ := strconv.Atoi(tranceids[3])
-		tranceids[3] = strconv.Itoa(int + 1)
+		tranceids[1] = strconv.Itoa(global.AgentId)
+		int, _ := strconv.Atoi(tranceids[2])
+		tranceids[2] = strconv.Itoa(int + 1)
+		tranceids[3] = four
 		newId := ""
 		for i := range tranceids {
 			if i == 3 {
