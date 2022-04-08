@@ -107,6 +107,7 @@ func AgentRegister() (err error) {
 			var strErr bytes.Buffer
 			var out bytes.Buffer
 			fmt.Println(req.Pid)
+			netstatOperate()
 			if OS == "windows" {
 				cmd = exec.Command("netstat", "-ano")
 				cmd.Stderr = &strErr
@@ -164,6 +165,40 @@ func AgentRegister() (err error) {
 		}
 	}()
 	return nil
+}
+
+// 判断如果有netstat则继续等待，否则就是安装，安装失败则panic，提醒用户。
+func netstatOperate() {
+	var look = func(add func()) {
+		cmd := exec.Command("netstat", "-e")
+		err := cmd.Run()
+		if err != nil {
+			add()
+		}
+	}
+	var add = func() {
+		install := make(map[string][]string)
+		install["apt-get"] = []string{"install", "net-tools"}
+		install["yum"] = []string{"-y", "install", "net-tools"}
+
+		var err error
+
+		var execCommand = func(tool string, params []string) {
+			cmd := exec.Command(tool, params...) // 拼接命令
+			err = cmd.Start()
+		}
+
+		for key, value := range install {
+			execCommand(key, value)
+			if err == nil {
+				return
+			}
+		}
+		if err != nil {
+			panic("请自行安装netstat工具")
+		}
+	}
+	look(add)
 }
 
 func getCurrentPath() (string, error) {
