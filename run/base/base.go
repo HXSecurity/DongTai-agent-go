@@ -22,6 +22,7 @@ import (
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/urlUrlString"
 	"github.com/HXSecurity/DongTai-agent-go/hook"
 	"github.com/HXSecurity/DongTai-agent-go/service"
+	"github.com/google/uuid"
 
 	"github.com/HXSecurity/DongTai-agent-go/global"
 )
@@ -32,4 +33,5 @@ func init() {
 	global.InitViper()
 	_ = service.AgentRegister()
 	b.HookAll()
+	global.TraceId = uuid.New().String() + "-" + uuid.New().String()
 }

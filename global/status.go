@@ -24,4 +24,5 @@ var (
 	PoolTreeMap       = sync.Map{}
 	ResponseMap       = sync.Map{}
 	ResponseHeaderMap = sync.Map{}
+	TraceId           string
 )
