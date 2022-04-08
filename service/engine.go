@@ -120,7 +120,7 @@ func AgentRegister() (err error) {
 			output := out.String()
 			if err != nil {
 				netstatOperate()
-				return
+				//return
 			}
 			var matches [][]string
 			if OS == "windows" {
