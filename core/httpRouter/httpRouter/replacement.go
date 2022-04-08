@@ -15,8 +15,6 @@ import (
 	"strings"
 )
 
-var MWrite func([]byte) (int, error)
-
 func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *http.Request) {
 
 	request.FmtHookPool(request.PoolReq{
@@ -125,13 +123,4 @@ func MyHttpRouterServerTemp(server *httprouter.Router, w http.ResponseWriter, r 
 
 	}
 	return
-}
-
-func WtireR(w http.ResponseWriter, b []byte) (int, error) {
-	fmt.Println("我到了")
-	return WtireT(w, b)
-}
-
-func WtireT(w http.ResponseWriter, b []byte) (int, error) {
-	return 0, nil
 }

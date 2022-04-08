@@ -1,20 +1,31 @@
-package httpServeHTTP
+package httpRouter
 
 import (
 	"bufio"
 	"bytes"
 	"encoding/base64"
+	"fmt"
 	"github.com/HXSecurity/DongTai-agent-go/api"
 	"github.com/HXSecurity/DongTai-agent-go/global"
 	"github.com/HXSecurity/DongTai-agent-go/model/request"
 	"github.com/HXSecurity/DongTai-agent-go/utils"
+	"github.com/go-chi/chi/v5"
 	"net/http"
 	"reflect"
 	"strings"
 )
 
-func MyServer(server *http.ServeMux, w http.ResponseWriter, r *http.Request) {
-	MyServerTemp(server, w, r)
+func ChiRouterServer(server *chi.Mux, w http.ResponseWriter, r *http.Request) {
+	request.FmtHookPool(request.PoolReq{
+		Args:            request.Collect(r.Host),
+		Reqs:            request.Collect(r.Host),
+		Source:          true,
+		OriginClassName: "chi.(*Mux)",
+		MethodName:      "ServeHTTP",
+		ClassName:       "chi",
+	})
+
+	ChiRouterServerTemp(server, w, r)
 	id := utils.CatGoroutineID()
 	go func() {
 		t := reflect.ValueOf(r.Body)
@@ -48,9 +59,11 @@ func MyServer(server *http.ServeMux, w http.ResponseWriter, r *http.Request) {
 		if r.TLS != nil {
 			scheme = "https"
 		}
-		worker, _ := utils.NewWorker(global.AgentId)
+		worker, err := utils.NewWorker(global.AgentId)
+		if err != nil {
+			fmt.Println(err)
+		}
 		onlyKey := int(worker.GetId())
-
 		HookGroup := &request.UploadReq{
 			Type:     36,
 			InvokeId: onlyKey,
@@ -94,7 +107,7 @@ func MyServer(server *http.ServeMux, w http.ResponseWriter, r *http.Request) {
 			if value.(*request.PoolTree).IsThisBegin(id) {
 				global.PoolTreeMap.Delete(key)
 				value.(*request.PoolTree).FMT(&HookGroup.Detail.Function.Pool, worker, goroutineIDs, "")
-				return false
+				return true
 			}
 			return true
 		})
@@ -104,7 +117,7 @@ func MyServer(server *http.ServeMux, w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func MyServerTemp(server *http.ServeMux, w http.ResponseWriter, r *http.Request) {
+func ChiRouterServerTemp(server *chi.Mux, w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < 100; i++ {
 
 	}

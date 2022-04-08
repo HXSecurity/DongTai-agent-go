@@ -10,7 +10,7 @@ import (
 )
 
 func init() {
-	h := new(hook.HttpRouter)
+	h := new(hook.ChiRouter)
 	global.AllHooks = append(global.AllHooks, h)
 	h.HookAll()
 }

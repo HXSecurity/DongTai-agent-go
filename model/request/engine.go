@@ -86,6 +86,7 @@ type Function struct {
 	ResBody       string `json:"resBody"`
 	Scheme        string `json:"scheme"`
 	ResHeader     string `json:"resHeader"`
+	TraceId       string `json:"traceId"`
 }
 
 type Pool struct {
@@ -105,6 +106,7 @@ type Pool struct {
 	CallerMethod     string        `json:"callerMethod"`
 	SourceHash       []string      `json:"sourceHash"`
 	RetClassName     string        `json:"retClassName"`
+	TraceId          string        `json:"traceId"`
 }
 
 type PoolReq struct {
@@ -155,8 +157,9 @@ func (p *PoolTree) IsThisBegin(GoroutineID string) bool {
 	return GoroutineID == p.GoroutineID && p.Begin
 }
 
-func (p *PoolTree) FMT(pools *[]Pool, w *utils.Worker, goroutineIDs map[string]bool) {
+func (p *PoolTree) FMT(pools *[]Pool, w *utils.Worker, goroutineIDs map[string]bool, TraceId string) {
 	p.Pool.InvokeId = int(w.GetId())
+	p.Pool.TraceId = TraceId
 	*pools = append(*pools, *p.Pool)
 	goroutineIDs[p.GoroutineID] = true
 	fmt.Println(p.Pool.ClassName, p.Pool.MethodName)
@@ -164,7 +167,7 @@ func (p *PoolTree) FMT(pools *[]Pool, w *utils.Worker, goroutineIDs map[string]b
 	fmt.Println(p.Pool.SourceHash, "===>", p.Pool.TargetHash)
 	for k, v := range p.Children {
 		global.PoolTreeMap.Delete(&v.Pool.TargetHash)
-		p.Children[k].FMT(pools, w, goroutineIDs)
+		p.Children[k].FMT(pools, w, goroutineIDs, TraceId)
 	}
 }
 

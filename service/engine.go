@@ -201,7 +201,7 @@ func AgentRegister() (err error) {
 						go func() {
 							for {
 								if live {
-									time.Sleep(5 * time.Second)
+									time.Sleep(50 * time.Second)
 									PingPang()
 									breaker()
 								}
