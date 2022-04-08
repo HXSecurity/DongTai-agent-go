@@ -5,6 +5,7 @@ go 1.11
 require (
 	github.com/brahma-adshonor/gohook v1.1.9
 	github.com/gin-gonic/gin v1.7.7
+	github.com/go-chi/chi v1.5.4
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/parnurzeal/gorequest v0.2.16
 	github.com/pkg/errors v0.9.1
