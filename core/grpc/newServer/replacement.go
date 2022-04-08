@@ -10,6 +10,8 @@ import (
 	"github.com/HXSecurity/DongTai-agent-go/utils"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
+	"strconv"
+	"strings"
 )
 
 func NewServer(opt ...grpc.ServerOption) *grpc.Server {
@@ -20,6 +22,24 @@ func NewServer(opt ...grpc.ServerOption) *grpc.Server {
 // interceptor 一元拦截器
 func interceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 	md, _ := metadata.FromIncomingContext(ctx)
+	Traceid := md.Get("dt-traceid")[0]
+	worker, _ := utils.NewWorker(global.AgentId)
+	four := strconv.Itoa(int(worker.GetId()))
+	tranceids := strings.Split(Traceid, ".")
+	tranceids[1] = strconv.Itoa(global.AgentId)
+	num, _ := strconv.Atoi(tranceids[3])
+	tranceids[3] = strconv.Itoa(num + 1)
+	tranceids[4] = four
+	newId := ""
+	for i := 0; i < len(tranceids); i++ {
+		if i == 4 {
+			newId += tranceids[i]
+		} else {
+			newId += tranceids[i] + "."
+		}
+	}
+	global.TraceId = tranceids[0]
+
 	id := utils.CatGoroutineID()
 	request.FmtHookPool(request.PoolReq{
 		Reqs:            request.Collect(req),
@@ -33,7 +53,7 @@ func interceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInf
 	go func() {
 		worker, _ := utils.NewWorker(global.AgentId)
 		onlyKey := int(worker.GetId())
-		header := base64.StdEncoding.EncodeToString([]byte(md.Get("headers")[0]))
+		header := base64.StdEncoding.EncodeToString([]byte("dt-traceid:" + newId))
 		HookGroup := &request.UploadReq{
 			Type:     36,
 			InvokeId: onlyKey,
@@ -41,9 +61,9 @@ func interceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInf
 				AgentId: global.AgentId,
 				Function: request.Function{
 					Method:        "RPC",
-					Url:           md.Get("requestURL")[0],
-					Uri:           md.Get("requestURI")[0],
-					Protocol:      md.Get("protocol")[0],
+					Url:           info.FullMethod,
+					Uri:           info.FullMethod,
+					Protocol:      "ProtoBuf",
 					ClientIp:      "",
 					Language:      "GO",
 					Scheme:        "GRPC",
@@ -52,7 +72,7 @@ func interceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInf
 					ReqBody:       "",
 					QueryString:   "",
 					Pool:          []request.Pool{},
-					TraceId:       md.Get("dt-traceid")[0],
+					TraceId:       newId,
 				},
 			},
 		}

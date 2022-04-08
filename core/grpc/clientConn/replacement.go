@@ -20,20 +20,21 @@ func Invoke(cl *grpc.ClientConn, ctx context.Context, method string, args, reply
 	}
 
 	if tranceid == "" {
-		tranceid = global.TraceId + "." + strconv.Itoa(global.AgentId) + ".0." + strconv.Itoa(int(worker.GetId()))
+		tranceid = global.TraceId + "." + strconv.Itoa(global.AgentId) + ".0.0." + strconv.Itoa(int(worker.GetId()))
 	} else {
 		four := strconv.Itoa(int(worker.GetId()))
 		tranceids := strings.Split(tranceid, ".")
 		tranceids[1] = strconv.Itoa(global.AgentId)
-		int, _ := strconv.Atoi(tranceids[2])
-		tranceids[2] = strconv.Itoa(int + 1)
-		tranceids[3] = four
+		num, _ := strconv.Atoi(tranceids[3])
+		tranceids[3] = strconv.Itoa(num + 1)
+		tranceids[4] = four
 		newId := ""
-		for i := range tranceids {
-			if i == 3 {
-				newId = tranceids[i]
+		for i := 0; i < len(tranceids); i++ {
+			if i == 4 {
+				newId += tranceids[i]
+			} else {
+				newId += tranceids[i] + "."
 			}
-			newId = tranceids[i] + "."
 		}
 		tranceid = newId
 	}
