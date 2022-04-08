@@ -11,6 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"reflect"
+	"strconv"
 	"strings"
 )
 
@@ -24,6 +25,8 @@ func MyServer(server *gin.Engine, w http.ResponseWriter, r *http.Request) {
 		for k, v := range r.Header {
 			headerBase += k + ": " + strings.Join(v, ",") + "\n"
 		}
+		tranceID := global.TraceId + "." + strconv.Itoa(global.AgentId) + ".0.0.0"
+		headerBase += "dt-traceid:" + tranceID
 		if t.Kind() == reflect.Ptr {
 			buf := t.
 				Elem().

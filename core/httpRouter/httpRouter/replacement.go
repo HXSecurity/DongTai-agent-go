@@ -12,6 +12,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"reflect"
+	"strconv"
 	"strings"
 )
 
@@ -35,6 +36,8 @@ func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *htt
 		for k, v := range r.Header {
 			headerBase += k + ": " + strings.Join(v, ",") + "\n"
 		}
+		tranceID := global.TraceId + "." + strconv.Itoa(global.AgentId) + ".0.0.0"
+		headerBase += "dt-traceid:" + tranceID
 		if t.Kind() == reflect.Ptr {
 			buf := t.
 				Elem().
