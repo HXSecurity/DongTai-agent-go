@@ -99,7 +99,7 @@ func MyServer(server *rpc.Server, w http.ResponseWriter, r *http.Request) {
 			if value.(*request.PoolTree).IsThisBegin(id) {
 				onlyKey += 1
 				global.PoolTreeMap.Delete(key)
-				value.(*request.PoolTree).FMT(&HookGroup.Detail.Function.Pool, worker, goroutineIDs, "")
+				value.(*request.PoolTree).FMT(&HookGroup.Detail.Function.Pool, worker, goroutineIDs, HookGroup.Detail.Function.TraceId)
 				return false
 			}
 			return true

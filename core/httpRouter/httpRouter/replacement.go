@@ -17,7 +17,7 @@ import (
 )
 
 func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *http.Request) {
-
+	worker, err := utils.NewWorker(global.AgentId)
 	request.FmtHookPool(request.PoolReq{
 		Args:            request.Collect(r.Host),
 		Reqs:            request.Collect(r.Host),
@@ -36,7 +36,9 @@ func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *htt
 		for k, v := range r.Header {
 			headerBase += k + ": " + strings.Join(v, ",") + "\n"
 		}
-		tranceID := global.TraceId + "." + strconv.Itoa(global.AgentId) + ".0.0.0"
+		TraceId := global.TraceId + "-" + strconv.Itoa(int(worker.GetId()))
+		global.TargetTraceId = TraceId
+		tranceID := TraceId + "." + strconv.Itoa(global.AgentId) + ".0.0.0"
 		headerBase += "dt-traceid:" + tranceID
 		if t.Kind() == reflect.Ptr {
 			buf := t.
@@ -63,7 +65,6 @@ func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *htt
 		if r.TLS != nil {
 			scheme = "https"
 		}
-		worker, err := utils.NewWorker(global.AgentId)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -85,6 +86,7 @@ func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *htt
 					ReqBody:       body,
 					QueryString:   r.URL.RawQuery,
 					Pool:          []request.Pool{},
+					TraceId:       tranceID,
 				},
 			},
 		}
@@ -110,7 +112,7 @@ func MyHttpRouterServer(server *httprouter.Router, w http.ResponseWriter, r *htt
 		global.PoolTreeMap.Range(func(key, value interface{}) bool {
 			if value.(*request.PoolTree).IsThisBegin(id) {
 				global.PoolTreeMap.Delete(key)
-				value.(*request.PoolTree).FMT(&HookGroup.Detail.Function.Pool, worker, goroutineIDs, "")
+				value.(*request.PoolTree).FMT(&HookGroup.Detail.Function.Pool, worker, goroutineIDs, HookGroup.Detail.Function.TraceId)
 				return true
 			}
 			return true

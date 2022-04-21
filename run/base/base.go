@@ -35,6 +35,5 @@ func init() {
 	_ = service.AgentRegister()
 	b.HookAll()
 	worker, _ := utils.NewWorker(global.AgentId)
-	strconv.Itoa(int(worker.GetId()))
-	global.TraceId = strconv.Itoa(int(worker.GetId())) + "-" + strconv.Itoa(int(worker.GetId()))
+	global.TraceId = strconv.Itoa(int(worker.GetId()))
 }

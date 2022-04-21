@@ -25,4 +25,5 @@ var (
 	ResponseMap       = sync.Map{}
 	ResponseHeaderMap = sync.Map{}
 	TraceId           string
+	TargetTraceId     string
 )

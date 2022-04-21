@@ -81,6 +81,7 @@ func ChiRouterServer(server *chi.Mux, w http.ResponseWriter, r *http.Request) {
 					ReqBody:       body,
 					QueryString:   r.URL.RawQuery,
 					Pool:          []request.Pool{},
+					//TraceId:       tranceID,
 				},
 			},
 		}
@@ -106,7 +107,7 @@ func ChiRouterServer(server *chi.Mux, w http.ResponseWriter, r *http.Request) {
 		global.PoolTreeMap.Range(func(key, value interface{}) bool {
 			if value.(*request.PoolTree).IsThisBegin(id) {
 				global.PoolTreeMap.Delete(key)
-				value.(*request.PoolTree).FMT(&HookGroup.Detail.Function.Pool, worker, goroutineIDs, "")
+				value.(*request.PoolTree).FMT(&HookGroup.Detail.Function.Pool, worker, goroutineIDs, HookGroup.Detail.Function.TraceId)
 				return true
 			}
 			return true
