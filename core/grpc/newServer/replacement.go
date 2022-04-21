@@ -14,6 +14,14 @@ import (
 	"strings"
 )
 
+const (
+	TraceId = iota
+	AgentId
+	RoutineId
+	NextKey
+	OnlyKey
+)
+
 func NewServer(opt ...grpc.ServerOption) *grpc.Server {
 	opt = append(opt, grpc.UnaryInterceptor(interceptor))
 	return NewServerT(opt...)
@@ -26,19 +34,16 @@ func interceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInf
 	worker, _ := utils.NewWorker(global.AgentId)
 	four := strconv.Itoa(int(worker.GetId()))
 	tranceids := strings.Split(Traceid, ".")
-	tranceids[1] = strconv.Itoa(global.AgentId)
-	num, _ := strconv.Atoi(tranceids[3])
-	tranceids[3] = strconv.Itoa(num + 1)
-	tranceids[4] = four
+	tranceids[AgentId] = strconv.Itoa(global.AgentId)
+	tranceids[OnlyKey] = four
 	newId := ""
 	for i := 0; i < len(tranceids); i++ {
-		if i == 4 {
+		if i == OnlyKey {
 			newId += tranceids[i]
 		} else {
 			newId += tranceids[i] + "."
 		}
 	}
-	global.TraceId = tranceids[0]
 
 	id := utils.CatGoroutineID()
 	request.FmtHookPool(request.PoolReq{

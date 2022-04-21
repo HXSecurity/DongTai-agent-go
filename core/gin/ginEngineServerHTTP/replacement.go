@@ -18,6 +18,7 @@ import (
 func MyServer(server *gin.Engine, w http.ResponseWriter, r *http.Request) {
 	MyServerTemp(server, w, r)
 	id := utils.CatGoroutineID()
+	worker, _ := utils.NewWorker(global.AgentId)
 	go func() {
 		t := reflect.ValueOf(r.Body)
 		var headerBase string
@@ -25,7 +26,10 @@ func MyServer(server *gin.Engine, w http.ResponseWriter, r *http.Request) {
 		for k, v := range r.Header {
 			headerBase += k + ": " + strings.Join(v, ",") + "\n"
 		}
-		tranceID := global.TraceId + "." + strconv.Itoa(global.AgentId) + ".0.0.0"
+
+		TraceId := global.TraceId + "-" + strconv.Itoa(int(worker.GetId()))
+		global.TargetTraceId = TraceId
+		tranceID := TraceId + "." + strconv.Itoa(global.AgentId) + ".0.0.0"
 		headerBase += "dt-traceid:" + tranceID
 		if t.Kind() == reflect.Ptr {
 			buf := t.
@@ -52,7 +56,6 @@ func MyServer(server *gin.Engine, w http.ResponseWriter, r *http.Request) {
 		if r.TLS != nil {
 			scheme = "https"
 		}
-		worker, _ := utils.NewWorker(global.AgentId)
 		onlyKey := int(worker.GetId())
 		HookGroup := &request.UploadReq{
 			Type:     36,
@@ -71,6 +74,7 @@ func MyServer(server *gin.Engine, w http.ResponseWriter, r *http.Request) {
 					ReqBody:       body,
 					QueryString:   r.URL.RawQuery,
 					Pool:          []request.Pool{},
+					TraceId:       tranceID,
 				},
 			},
 		}
@@ -97,7 +101,7 @@ func MyServer(server *gin.Engine, w http.ResponseWriter, r *http.Request) {
 		global.PoolTreeMap.Range(func(key, value interface{}) bool {
 			if value.(*request.PoolTree).IsThisBegin(id) {
 				global.PoolTreeMap.Delete(key)
-				value.(*request.PoolTree).FMT(&HookGroup.Detail.Function.Pool, worker, goroutineIDs, "")
+				value.(*request.PoolTree).FMT(&HookGroup.Detail.Function.Pool, worker, goroutineIDs, HookGroup.Detail.Function.TraceId)
 				return false
 			}
 			return true

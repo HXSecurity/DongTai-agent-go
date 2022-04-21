@@ -2,6 +2,7 @@ package clientConn
 
 import (
 	"context"
+	"fmt"
 	"github.com/HXSecurity/DongTai-agent-go/global"
 	"github.com/HXSecurity/DongTai-agent-go/model/request"
 	"github.com/HXSecurity/DongTai-agent-go/utils"
@@ -11,6 +12,14 @@ import (
 	"strings"
 )
 
+const (
+	TraceId = iota
+	AgentId
+	RoutineId
+	NextKey
+	OnlyKey
+)
+
 func Invoke(cl *grpc.ClientConn, ctx context.Context, method string, args, reply interface{}, opts ...grpc.CallOption) error {
 	outmd, _ := metadata.FromIncomingContext(ctx)
 	worker, _ := utils.NewWorker(global.AgentId)
@@ -18,19 +27,18 @@ func Invoke(cl *grpc.ClientConn, ctx context.Context, method string, args, reply
 	if len(outmd.Get("dt-traceid")) > 0 {
 		tranceid = outmd.Get("dt-traceid")[0]
 	}
-
 	if tranceid == "" {
-		tranceid = global.TraceId + "." + strconv.Itoa(global.AgentId) + ".0.0." + strconv.Itoa(int(worker.GetId()))
+		tranceid = global.TargetTraceId + "." + strconv.Itoa(global.AgentId) + ".0.1." + strconv.Itoa(int(worker.GetId()))
 	} else {
 		four := strconv.Itoa(int(worker.GetId()))
 		tranceids := strings.Split(tranceid, ".")
-		tranceids[1] = strconv.Itoa(global.AgentId)
-		num, _ := strconv.Atoi(tranceids[3])
-		tranceids[3] = strconv.Itoa(num + 1)
-		tranceids[4] = four
+		tranceids[AgentId] = strconv.Itoa(global.AgentId)
+		num, _ := strconv.Atoi(tranceids[NextKey])
+		tranceids[NextKey] = strconv.Itoa(num + 1)
+		tranceids[OnlyKey] = four
 		newId := ""
 		for i := 0; i < len(tranceids); i++ {
-			if i == 4 {
+			if i == OnlyKey {
 				newId += tranceids[i]
 			} else {
 				newId += tranceids[i] + "."
@@ -44,6 +52,7 @@ func Invoke(cl *grpc.ClientConn, ctx context.Context, method string, args, reply
 		"requestURI", method,
 		"headers", "traceid:"+tranceid,
 	)
+	fmt.Println(tranceid)
 	ctx = metadata.NewOutgoingContext(ctx, md)
 	err := InvokeT(cl, ctx, method, args, reply, opts...)
 	request.FmtHookPool(request.PoolReq{
