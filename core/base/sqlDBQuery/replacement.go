@@ -6,7 +6,7 @@ import (
 )
 
 func Query(db *sql.DB, query string, args ...interface{}) (*sql.Rows, error) {
-	rows, sql := QueryT(db, query, args)
+	rows, sql := QueryT(db, query, args...)
 	request.FmtHookPool(request.PoolReq{
 		Args:            request.Collect(query, args),
 		Reqs:            request.Collect(rows, sql),
