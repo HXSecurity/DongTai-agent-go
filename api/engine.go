@@ -31,10 +31,9 @@ func AgentRegister(req request.AgentRegisterReq) (AgentId int, err error) {
 			AgentId = res.Data.Id
 			fmt.Println("注册成功，探针ID为", res.Data.Id)
 			return AgentId, nil
-		} else {
-			return 0, errors.New("注册失败，失败原因" + res.Msg)
-		}
-		return 0, err
+		} 
+		return 0, errors.New("注册失败，失败原因" + res.Msg)
+
 	}
 	return 0, errors.New("状态码为" + resp.Status)
 }
