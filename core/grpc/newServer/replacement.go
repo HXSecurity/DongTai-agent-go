@@ -30,8 +30,12 @@ func NewServer(opt ...grpc.ServerOption) *grpc.Server {
 // interceptor 一元拦截器
 func interceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 	md, _ := metadata.FromIncomingContext(ctx)
-	Traceid := md.Get("dt-traceid")[0]
 	worker, _ := utils.NewWorker(global.AgentId)
+	dt := md.Get("dt-traceid")
+	var Traceid = global.TargetTraceId + "." + strconv.Itoa(global.AgentId) + ".0.0." + strconv.Itoa(int(worker.GetId()))
+	if len(dt) != 0 {
+		Traceid = dt[0]
+	}
 	four := strconv.Itoa(int(worker.GetId()))
 	tranceids := strings.Split(Traceid, ".")
 	tranceids[AgentId] = strconv.Itoa(global.AgentId)
