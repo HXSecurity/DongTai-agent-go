@@ -200,11 +200,9 @@ func AgentRegister() (err error) {
 						global.AgentId = agentId
 						go func() {
 							for {
-								if live {
-									time.Sleep(50 * time.Second)
-									PingPang()
-									breaker()
-								}
+								time.Sleep(10 * time.Second)
+								PingPang()
+								breaker()
 							}
 						}()
 						break
