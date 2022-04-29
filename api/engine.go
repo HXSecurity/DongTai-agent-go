@@ -46,6 +46,7 @@ func Limit() map[string]string {
 		for _, v := range errs {
 			fmt.Println(v)
 		}
+		return limit
 	}
 	if resp.StatusCode == 200 {
 		var res response.LimitRes
