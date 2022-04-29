@@ -52,6 +52,7 @@ func interceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInf
 	id := utils.CatGoroutineID()
 	request.FmtHookPool(request.PoolReq{
 		Reqs:            request.Collect(req),
+		Args:            request.Collect(req),
 		Source:          true,
 		OriginClassName: "grpc",
 		MethodName:      "NewServer",

@@ -262,6 +262,8 @@ func PingPang() {
 	req.Detail.Pant.Disk = "{}"
 	req.Detail.Pant.Cpu = string(cpuByte)
 	req.Detail.Pant.Memory = string(memoryByte)
+	req.Detail.Pant.IsCoreRunning = 1
+	req.Detail.Pant.IsCoreInstalled = 1
 	req.Detail.AgentId = global.AgentId
 	api.ReportUpload(req)
 }

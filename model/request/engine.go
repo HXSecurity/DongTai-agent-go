@@ -53,13 +53,15 @@ type Detail struct {
 }
 
 type Pant struct {
-	Disk        string `json:"disk"`
-	Memory      string `json:"memory"`
-	Cpu         string `json:"cpu"`
-	MethodQueue int    `json:"methodQueue"`
-	ReplayQueue int    `json:"replayQueue"`
-	ReqCount    int    `json:"reqCount"`
-	ReportQueue int    `json:"reportQueue"`
+	Disk            string `json:"disk"`
+	Memory          string `json:"memory"`
+	Cpu             string `json:"cpu"`
+	MethodQueue     int    `json:"methodQueue"`
+	ReplayQueue     int    `json:"replayQueue"`
+	ReqCount        int    `json:"reqCount"`
+	ReportQueue     int    `json:"reportQueue"`
+	IsCoreInstalled int    `json:"isCoreInstalled"`
+	IsCoreRunning   int    `json:"isCoreRunning"`
 }
 
 type Component struct {
@@ -159,7 +161,9 @@ func (p *PoolTree) IsThisBegin(GoroutineID string) bool {
 
 func (p *PoolTree) FMT(pools *[]Pool, w *utils.Worker, goroutineIDs map[string]bool, TraceId string) {
 	p.Pool.InvokeId = int(w.GetId())
-	p.Pool.TraceId = TraceId
+	if(p.Pool.ClassName == "grpc.(*ClientConn)"){
+		p.Pool.TraceId = TraceId
+	}
 	*pools = append(*pools, *p.Pool)
 	goroutineIDs[p.GoroutineID] = true
 	fmt.Println(p.Pool.ClassName, p.Pool.MethodName)
