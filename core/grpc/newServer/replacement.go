@@ -38,7 +38,6 @@ func interceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInf
 	}
 	four := strconv.Itoa(int(worker.GetId()))
 	tranceids := strings.Split(Traceid, ".")
-	tranceids[AgentId] = strconv.Itoa(global.AgentId)
 	tranceids[OnlyKey] = four
 	newId := ""
 	for i := 0; i < len(tranceids); i++ {
