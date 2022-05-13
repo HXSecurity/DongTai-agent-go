@@ -39,6 +39,8 @@ func WriteMessages(w *kafka.Writer, ctx context.Context, msgs ...kafka.Message) 
 			OriginClassName: "kafka.(*Writer)",
 			MethodName:      "WriteMessages",
 			ClassName:       "kafka.(*Writer)",
+			TraceId:         traceId,
+			Plugin:          "KAFKA",
 		})
 	}
 

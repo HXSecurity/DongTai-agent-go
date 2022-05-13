@@ -3,13 +3,14 @@ package clientConn
 import (
 	"context"
 	"fmt"
+	"strconv"
+	"strings"
+
 	"github.com/HXSecurity/DongTai-agent-go/global"
 	"github.com/HXSecurity/DongTai-agent-go/model/request"
 	"github.com/HXSecurity/DongTai-agent-go/utils"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
-	"strconv"
-	"strings"
 )
 
 const (
@@ -63,6 +64,7 @@ func Invoke(cl *grpc.ClientConn, ctx context.Context, method string, args, reply
 		MethodName:      "Invoke",
 		ClassName:       "grpc.(*ClientConn)",
 		TraceId:         tranceid,
+		Plugin:          "GRPC",
 	})
 	return err
 }
