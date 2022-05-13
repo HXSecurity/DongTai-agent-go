@@ -20,6 +20,7 @@ require (
 	github.com/jinzhu/now v1.1.3 // indirect
 	github.com/json-iterator/go v1.1.11 // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
+	github.com/segmentio/kafka-go v0.4.31
 	github.com/smartystreets/goconvey v1.7.2 // indirect
 	github.com/tklauser/go-sysconf v0.3.9 // indirect
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect

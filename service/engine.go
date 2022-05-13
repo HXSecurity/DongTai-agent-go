@@ -5,11 +5,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/HXSecurity/DongTai-agent-go/api"
-	"github.com/HXSecurity/DongTai-agent-go/global"
-	"github.com/HXSecurity/DongTai-agent-go/hook"
-	"github.com/HXSecurity/DongTai-agent-go/utils"
-	"github.com/pkg/errors"
 	"os/exec"
 	"path/filepath"
 	"regexp"
@@ -17,11 +12,18 @@ import (
 	"strings"
 	"time"
 
-	//"github.com/HXSecurity/DongTai-agent-go/api"
-	"github.com/HXSecurity/DongTai-agent-go/model/request"
+	"github.com/HXSecurity/DongTai-agent-go/api"
+	"github.com/HXSecurity/DongTai-agent-go/global"
+	"github.com/HXSecurity/DongTai-agent-go/hook"
+	"github.com/HXSecurity/DongTai-agent-go/utils"
+	"github.com/pkg/errors"
+
 	"net"
 	"os"
 	"runtime"
+
+	// "github.com/HXSecurity/DongTai-agent-go/api"
+	"github.com/HXSecurity/DongTai-agent-go/model/request"
 )
 
 var live bool

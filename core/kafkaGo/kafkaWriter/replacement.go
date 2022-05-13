@@ -1,15 +1,16 @@
-package clientConn
+package kafkaWriter
 
 import (
 	"context"
 	"fmt"
+	"reflect"
 	"strconv"
 	"strings"
 
 	"github.com/HXSecurity/DongTai-agent-go/global"
 	"github.com/HXSecurity/DongTai-agent-go/model/request"
 	"github.com/HXSecurity/DongTai-agent-go/utils"
-	"google.golang.org/grpc"
+	"github.com/segmentio/kafka-go"
 	"google.golang.org/grpc/metadata"
 )
 
@@ -21,7 +22,33 @@ const (
 	OnlyKey
 )
 
-func Invoke(cl *grpc.ClientConn, ctx context.Context, method string, args, reply interface{}, opts ...grpc.CallOption) error {
+func WriteMessages(w *kafka.Writer, ctx context.Context, msgs ...kafka.Message) error {
+	for idx, msg := range msgs {
+		traceId := getTraceId(ctx)
+		msgs[idx].Headers = append(msg.Headers, kafka.Header{
+			Key:   "dt-traceid",
+			Value: []byte(traceId),
+		})
+
+		fmt.Println("traceId:", traceId, "msg:", msg.Value)
+		v := reflect.ValueOf(msg.Value)
+		request.FmtHookPool(request.PoolReq{
+			Args:            request.Collect(msg.Value),
+			NeedHook:        request.Collect(v.Pointer()),
+			Source:          false,
+			OriginClassName: "kafka.(*Writer)",
+			MethodName:      "WriteMessages",
+			ClassName:       "kafka.(*Writer)",
+			TraceId:         traceId,
+			Plugin:          "KAFKA",
+		})
+	}
+
+	err := WriteMessagesT(w, ctx, msgs...)
+	return err
+}
+
+func getTraceId(ctx context.Context) string {
 	outmd, _ := metadata.FromIncomingContext(ctx)
 	worker, _ := utils.NewWorker(global.AgentId)
 	var tranceid string
@@ -47,27 +74,10 @@ func Invoke(cl *grpc.ClientConn, ctx context.Context, method string, args, reply
 		}
 		tranceid = newId
 	}
-	md := metadata.Pairs("dt-traceid", tranceid,
-		"protocol", "ProtoBuf",
-		"requestURL", cl.Target()+method,
-		"requestURI", method,
-		"headers", "traceid:"+tranceid,
-	)
-	fmt.Println(tranceid)
-	ctx = metadata.NewOutgoingContext(ctx, md)
-	err := InvokeT(cl, ctx, method, args, reply, opts...)
-	request.FmtHookPool(request.PoolReq{
-		Args:            request.Collect(args),
-		Reqs:            request.Collect(reply),
-		Source:          false,
-		OriginClassName: "grpc.(*ClientConn)",
-		MethodName:      "Invoke",
-		ClassName:       "grpc.(*ClientConn)",
-		TraceId:         tranceid,
-		Plugin:          "GRPC",
-	})
-	return err
+
+	return tranceid
 }
-func InvokeT(cl *grpc.ClientConn, ctx context.Context, method string, args, reply interface{}, opts ...grpc.CallOption) error {
+
+func WriteMessagesT(w *kafka.Writer, ctx context.Context, msgs ...kafka.Message) error {
 	return nil
 }
