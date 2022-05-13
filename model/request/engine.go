@@ -2,10 +2,11 @@ package request
 
 import (
 	"fmt"
-	"github.com/HXSecurity/DongTai-agent-go/global"
-	"github.com/HXSecurity/DongTai-agent-go/utils"
 	"reflect"
 	"strconv"
+
+	"github.com/HXSecurity/DongTai-agent-go/global"
+	"github.com/HXSecurity/DongTai-agent-go/utils"
 )
 
 type AgentRegisterReq struct {
@@ -109,6 +110,7 @@ type Pool struct {
 	SourceHash       []string      `json:"sourceHash"`
 	RetClassName     string        `json:"retClassName"`
 	TraceId          string        `json:"traceId"`
+	Plugin           string        `json:"plugin"`
 }
 
 type PoolReq struct {
@@ -122,6 +124,7 @@ type PoolReq struct {
 	NeedCatch       []interface{}
 	ArgsStr         string
 	TraceId         string
+	Plugin          string
 }
 
 type Log struct {
@@ -162,9 +165,9 @@ func (p *PoolTree) IsThisBegin(GoroutineID string) bool {
 
 func (p *PoolTree) FMT(pools *[]Pool, w *utils.Worker, goroutineIDs map[string]bool, TraceId string) {
 	p.Pool.InvokeId = int(w.GetId())
-	//if(p.Pool.ClassName == "grpc.(*ClientConn)"){
+	// if(p.Pool.ClassName == "grpc.(*ClientConn)"){
 	//	p.Pool.TraceId = TraceId
-	//}
+	// }
 	*pools = append(*pools, *p.Pool)
 	goroutineIDs[p.GoroutineID] = true
 	fmt.Println(p.Pool.ClassName, p.Pool.MethodName)
@@ -251,6 +254,7 @@ func FmtHookPool(p PoolReq) Pool {
 		RetClassName:     RetClassNames,
 		Args:             ArgsStr,
 		TraceId:          p.TraceId,
+		Plugin:           p.Plugin,
 	}
 
 	poolTree := PoolTree{
