@@ -13,7 +13,9 @@ import (
 	req: api.AgentRegisterReq
 */
 func AgentRegister(req request.AgentRegisterReq) (AgentId int, err error) {
+	fmt.Println("探针注册开始等待返回")
 	resp, body, errs := POST("/api/v1/agent/register", req).End()
+	fmt.Println("探针注册返回:", string(body))
 	if len(errs) > 0 {
 		for _, v := range errs {
 			fmt.Println(v)
@@ -31,7 +33,7 @@ func AgentRegister(req request.AgentRegisterReq) (AgentId int, err error) {
 			AgentId = res.Data.Id
 			fmt.Println("注册成功，探针ID为", res.Data.Id)
 			return AgentId, nil
-		} 
+		}
 		return 0, errors.New("注册失败，失败原因" + res.Msg)
 
 	}

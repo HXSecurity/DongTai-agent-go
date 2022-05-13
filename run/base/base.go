@@ -3,7 +3,7 @@ package base
 import (
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/bufioWriterWrite"
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/bufioWriterWriteString"
-	_ "github.com/HXSecurity/DongTai-agent-go/core/base/execCmdRun"
+	_ "github.com/HXSecurity/DongTai-agent-go/core/base/execCmdStart"
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/execCommand"
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/fmtSprintf"
 	_ "github.com/HXSecurity/DongTai-agent-go/core/base/htmlTemplateExecuteTemplate"

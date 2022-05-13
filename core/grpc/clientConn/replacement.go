@@ -62,6 +62,7 @@ func Invoke(cl *grpc.ClientConn, ctx context.Context, method string, args, reply
 		OriginClassName: "grpc.(*ClientConn)",
 		MethodName:      "Invoke",
 		ClassName:       "grpc.(*ClientConn)",
+		TraceId:         tranceid,
 	})
 	return err
 }

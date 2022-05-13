@@ -11,7 +11,6 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 	"strconv"
-	"strings"
 )
 
 const (
@@ -36,17 +35,6 @@ func interceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInf
 	if len(dt) != 0 {
 		Traceid = dt[0]
 	}
-	four := strconv.Itoa(int(worker.GetId()))
-	tranceids := strings.Split(Traceid, ".")
-	tranceids[OnlyKey] = four
-	newId := ""
-	for i := 0; i < len(tranceids); i++ {
-		if i == OnlyKey {
-			newId += tranceids[i]
-		} else {
-			newId += tranceids[i] + "."
-		}
-	}
 
 	id := utils.CatGoroutineID()
 	request.FmtHookPool(request.PoolReq{
@@ -56,13 +44,14 @@ func interceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInf
 		OriginClassName: "grpc",
 		MethodName:      "NewServer",
 		ClassName:       "grpc",
+		TraceId:         Traceid,
 	})
 	// 获取metadata
 	res, err := handler(ctx, req)
 	go func() {
 		worker, _ := utils.NewWorker(global.AgentId)
 		onlyKey := int(worker.GetId())
-		header := base64.StdEncoding.EncodeToString([]byte("dt-traceid:" + newId))
+		header := base64.StdEncoding.EncodeToString([]byte("dt-traceid:" + Traceid))
 		HookGroup := &request.UploadReq{
 			Type:     36,
 			InvokeId: onlyKey,
@@ -81,7 +70,7 @@ func interceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInf
 					ReqBody:       "",
 					QueryString:   "",
 					Pool:          []request.Pool{},
-					TraceId:       newId,
+					TraceId:       Traceid,
 				},
 			},
 		}

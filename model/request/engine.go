@@ -121,6 +121,7 @@ type PoolReq struct {
 	NeedHook        []interface{}
 	NeedCatch       []interface{}
 	ArgsStr         string
+	TraceId         string
 }
 
 type Log struct {
@@ -161,9 +162,9 @@ func (p *PoolTree) IsThisBegin(GoroutineID string) bool {
 
 func (p *PoolTree) FMT(pools *[]Pool, w *utils.Worker, goroutineIDs map[string]bool, TraceId string) {
 	p.Pool.InvokeId = int(w.GetId())
-	if(p.Pool.ClassName == "grpc.(*ClientConn)"){
-		p.Pool.TraceId = TraceId
-	}
+	//if(p.Pool.ClassName == "grpc.(*ClientConn)"){
+	//	p.Pool.TraceId = TraceId
+	//}
 	*pools = append(*pools, *p.Pool)
 	goroutineIDs[p.GoroutineID] = true
 	fmt.Println(p.Pool.ClassName, p.Pool.MethodName)
@@ -249,6 +250,7 @@ func FmtHookPool(p PoolReq) Pool {
 		CallerMethod:     callerMethod,
 		RetClassName:     RetClassNames,
 		Args:             ArgsStr,
+		TraceId:          p.TraceId,
 	}
 
 	poolTree := PoolTree{

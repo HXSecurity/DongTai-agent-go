@@ -1,4 +1,4 @@
-package execCmdRun
+package execCmdStart
 
 import (
 	"github.com/HXSecurity/DongTai-agent-go/model/request"
@@ -6,8 +6,8 @@ import (
 	"reflect"
 )
 
-func Run(cmd *exec.Cmd) error {
-	e := RunT(cmd)
+func Start(cmd *exec.Cmd) error {
+	e := StartT(cmd)
 	//
 	var u uintptr
 	value := reflect.ValueOf(cmd)
@@ -18,12 +18,12 @@ func Run(cmd *exec.Cmd) error {
 		NeedHook:        request.Collect(u),
 		Source:          false,
 		OriginClassName: "exec.(*Cmd)",
-		MethodName:      "Run",
+		MethodName:      "Start",
 		ClassName:       "exec.(*Cmd)",
 	})
 	return e
 }
 
-func RunT(cmd *exec.Cmd) error {
+func StartT(cmd *exec.Cmd) error {
 	return nil
 }

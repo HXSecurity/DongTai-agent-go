@@ -5,12 +5,14 @@ import (
 	"github.com/HXSecurity/DongTai-agent-go/global"
 	"github.com/HXSecurity/DongTai-agent-go/utils"
 	"github.com/parnurzeal/gorequest"
+	"time"
 )
 
 // NewRequest
 // 空白的请求工具 预留做后续的统一参数处理
 func NewRequest() *gorequest.SuperAgent {
 	request := gorequest.New()
+	request.Timeout(30 * time.Second)
 	return request
 }
 

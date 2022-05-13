@@ -73,6 +73,7 @@ func RunAgent() {
 }
 
 func AgentRegister() (err error) {
+	max := 6
 	breaker := CreateCircuitBreaker()
 	live = true
 	OS := runtime.GOOS
@@ -146,7 +147,8 @@ func AgentRegister() (err error) {
 	}
 	go func() {
 		for {
-			fmt.Println("等待当前程序http启动完成")
+			max = max - 1
+			fmt.Printf("等待当前程序当前程序启动完成，剩余%d次", max)
 			time.Sleep(1 * time.Second)
 			ip, err := utils.ExternalIP()
 			if err != nil {
@@ -164,7 +166,9 @@ func AgentRegister() (err error) {
 				cmd.Stderr = &strErr
 				cmd.Stdout = &out
 			}
+			fmt.Println("等待当前程序端口返回")
 			err = cmd.Run()
+			fmt.Println("等待当前程序端口返回成功")
 			output := out.String()
 			if err != nil {
 				return
@@ -187,10 +191,15 @@ func AgentRegister() (err error) {
 				r := regexp.MustCompile(`:::\s*(.*?)\s* `)
 				matches = r.FindAllStringSubmatch(output, -1)
 			}
-			if matches != nil {
-				if matches[0] != nil {
-					if matches[0][1] != "" {
-						req.ServerPort = matches[0][1]
+			if matches != nil || max == 0 {
+				if matches[0] != nil || max == 0 {
+					if matches[0][1] != "" || max == 0 {
+						fmt.Println("当前程序启动完成")
+						if max == 0 {
+							req.ServerPort = ""
+						} else {
+							req.ServerPort = matches[0][1]
+						}
 						req.ServerAddr = ip.String()
 						agentId, err := api.AgentRegister(req)
 						if err != nil {

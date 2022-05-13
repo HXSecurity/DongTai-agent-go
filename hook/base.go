@@ -12,7 +12,7 @@ func (b *Base) GetHook() []string {
 		"jsonNewDecoder",
 		"runtimeConcatstrings",
 		"execCommand",
-		"execCmdRun",
+		"execCmdStart",
 		"bufioWriterWrite",
 		"bufioWriterWriteString",
 		"runtimesSringtoslicebyte",
