@@ -15,7 +15,6 @@ func Command(name string, arg ...string) *exec.Cmd {
 	request.FmtHookPool(request.PoolReq{
 		Args:            request.Collect(name, arg),
 		Reqs:            request.Collect(e),
-		NeedHook:        request.Collect(name),
 		NeedCatch:       request.Collect(u),
 		Source:          false,
 		OriginClassName: "exec",

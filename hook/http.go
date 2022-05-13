@@ -5,9 +5,10 @@ type Http struct {
 
 func (h *Http) GetHook() []string {
 	return []string{
+		"httpHeaderGet",
+		"httpRequestCookie",
 		"httpServeHTTP",
 		"httpRequestFormValue",
-		"httpServeHTTP",
 		"urlURLQuery",
 	}
 }
