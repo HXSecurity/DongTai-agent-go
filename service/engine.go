@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os/exec"
-	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
@@ -16,8 +15,6 @@ import (
 	"github.com/HXSecurity/DongTai-agent-go/global"
 	"github.com/HXSecurity/DongTai-agent-go/hook"
 	"github.com/HXSecurity/DongTai-agent-go/utils"
-	"github.com/pkg/errors"
-
 	"net"
 	"os"
 	"runtime"
@@ -204,11 +201,13 @@ func AgentRegister() (err error) {
 						}
 						req.ServerAddr = ip.String()
 						agentId, err := api.AgentRegister(req)
+
 						if err != nil {
 							fmt.Println(err)
 							break
 						}
 						global.AgentId = agentId
+						UploadSca()
 						go func() {
 							for {
 								time.Sleep(10 * time.Second)
@@ -226,32 +225,12 @@ func AgentRegister() (err error) {
 	return nil
 }
 
-func getCurrentPath() (string, error) {
-	file, err := exec.LookPath(os.Args[0])
-	if err != nil {
-		return "", err
-	}
-	path, err := filepath.Abs(file)
-	if err != nil {
-		return "", err
-	}
-	i := strings.LastIndex(path, "/")
-	if i < 0 {
-		i = strings.LastIndex(path, "\\")
-	}
-	if i < 0 {
-		return "", errors.New(`error: Can't find "/" or "\".`)
-	}
-	return string(path[0 : i+1]), nil
-}
-
 func PingPang() {
 	s, err := getServerInfo()
 	if err != nil {
 		return
 	}
 	var req request.UploadReq
-
 	cpuMap := make(map[string]string)
 	memoryMap := make(map[string]string)
 	var cpus float64 = 0
@@ -278,22 +257,11 @@ func PingPang() {
 	req.Detail.AgentId = global.AgentId
 	api.ReportUpload(req)
 }
-
-func getServerInfo() (server *utils.Server, err error) {
-	var s utils.Server
-	s.Os = utils.InitOS()
-	if s.Cpu, err = utils.InitCPU(); err != nil {
-		fmt.Println(err.Error())
-		return &s, err
-	}
-	if s.Rrm, err = utils.InitRAM(); err != nil {
-		fmt.Println(err.Error())
-		return &s, err
-	}
-	if s.Disk, err = utils.InitDisk(); err != nil {
-		fmt.Println(err.Error())
-		return &s, err
-	}
-
-	return &s, nil
+func UploadSca() {
+	packages := GetMod()
+	var req request.UploadReq
+	req.Type = 18
+	req.Detail.AgentId = global.AgentId
+	req.Detail.Packages = packages
+	api.ReportUpload(req)
 }

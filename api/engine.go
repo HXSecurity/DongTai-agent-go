@@ -95,9 +95,13 @@ func ReportUpload(req request.UploadReq) {
 		var res response.ResBase
 		err := json.Unmarshal([]byte(body), &res)
 		if res.Status == 201 {
-			//fmt.Println(res.Msg)
+			if req.Type != 1 {
+				fmt.Println(res.Msg)
+			}
 		} else {
-			//fmt.Println(res.Msg)
+			if req.Type != 1 {
+				fmt.Println(res.Msg)
+			}
 		}
 		if err != nil {
 			fmt.Println(err)

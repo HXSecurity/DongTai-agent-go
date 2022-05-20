@@ -47,6 +47,7 @@ type Detail struct {
 	AgentId int `json:"agentId"`
 	Pant
 	Component
+	Components
 	Function
 	Pool
 	Log
@@ -70,6 +71,10 @@ type Component struct {
 	PackageSignature string `json:"packageSignature"`
 	PackageName      string `json:"packageName"`
 	PackageAlgorithm string `json:"packageAlgorithm"`
+}
+
+type Components struct {
+	Packages []Component `json:"packages"`
 }
 
 type Function struct {
