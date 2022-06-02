@@ -20,7 +20,7 @@ func GenAQLForGolang(packageName, version string) string {
 }
 
 // 获取包
-func GetMod() []request.Component {
+func GetMod() ([]request.Component, string) {
 	//fmt.Println(getCurrentPath())
 	path, _ := os.Executable()
 	return scanFile(path, true)
@@ -35,7 +35,7 @@ func isExe(file string, info fs.FileInfo) bool {
 }
 
 // 从二进制文件读取包信息
-func scanFile(file string, mustPrint bool) (packages []request.Component) {
+func scanFile(file string, mustPrint bool) (packages []request.Component, agentVersion string) {
 	bi, err := buildinfo.ReadFile(file)
 	if err != nil {
 		if mustPrint {
@@ -45,7 +45,7 @@ func scanFile(file string, mustPrint bool) (packages []request.Component) {
 				fmt.Fprintf(os.Stderr, "%s: %v\n", file, err)
 			}
 		}
-		return packages
+		return packages, agentVersion
 	}
 	fmt.Printf("%s: %s\n", file, bi.GoVersion)
 	bi.GoVersion = "" // suppress printing go version again
@@ -57,16 +57,21 @@ func scanFile(file string, mustPrint bool) (packages []request.Component) {
 		if licl[0] == "dep" {
 			fmt.Printf("依赖:%s\t版本:%s\n", licl[1], licl[2])
 			aql := GenAQLForGolang(licl[1], licl[2])
+			if licl[1] == "github.com/HXSecurity/DongTai-agent-go" {
+				fmt.Println("当前探针版本为：" + licl[2])
+				agentVersion = licl[2]
+			}
 			packages = append(packages, request.Component{
 				PackageName:      aql,
 				PackageAlgorithm: "SHA-1",
 				PackagePath:      file,
+				PackageVersion:   licl[2],
 				PackageSignature: utils.SHA1(aql),
 			},
 			)
 		}
 	}
-	return
+	return packages, agentVersion
 }
 
 // 获取服务信息

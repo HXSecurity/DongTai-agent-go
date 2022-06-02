@@ -78,6 +78,7 @@ func AgentRegister() (err error) {
 	OS := runtime.GOOS
 	hostname, _ := os.Hostname()
 	version := "1.0.0"
+	packages, agentVersion := GetMod()
 	if global.Config.DongtaiGoProjectVersion != "" {
 		version = global.Config.DongtaiGoProjectVersion
 	}
@@ -132,7 +133,8 @@ func AgentRegister() (err error) {
 		AutoCreateProject: global.Config.DongtaiGoProjectCreate,
 		Name:              name,
 		Language:          "GO",
-		Version:           version,
+		Version:           agentVersion,
+		ProjectVersion:    version,
 		ProjectName:       projectName,
 		Hostname:          hostname,
 		Network:           ips,
@@ -201,13 +203,12 @@ func AgentRegister() (err error) {
 						}
 						req.ServerAddr = ip.String()
 						agentId, err := api.AgentRegister(req)
-
 						if err != nil {
 							fmt.Println(err)
 							break
 						}
 						global.AgentId = agentId
-						UploadSca()
+						UploadSca(packages)
 						go func() {
 							for {
 								time.Sleep(10 * time.Second)
@@ -257,8 +258,7 @@ func PingPang() {
 	req.Detail.AgentId = global.AgentId
 	api.ReportUpload(req)
 }
-func UploadSca() {
-	packages := GetMod()
+func UploadSca(packages []request.Component) {
 	var req request.UploadReq
 	req.Type = 18
 	req.Detail.AgentId = global.AgentId

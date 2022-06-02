@@ -24,6 +24,7 @@ type AgentRegisterReq struct {
 	ServerPath        string `json:"serverPath"`
 	ServerEnv         string `json:"serverEnv"`
 	Pid               string `json:"pid"`
+	ProjectVersion    string `json:"projectVersion"`
 }
 
 type HookRuleReq struct {
@@ -68,6 +69,7 @@ type Pant struct {
 
 type Component struct {
 	PackagePath      string `json:"packagePath"`
+	PackageVersion   string `json:"packageVersion"`
 	PackageSignature string `json:"packageSignature"`
 	PackageName      string `json:"packageName"`
 	PackageAlgorithm string `json:"packageAlgorithm"`
