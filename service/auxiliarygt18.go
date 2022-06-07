@@ -1,11 +1,12 @@
+//go:build go1.18
+// +build go1.18
+
 package service
 
 import (
-	"bytes"
-	"encoding/binary"
+	"debug/buildinfo"
 	"fmt"
 	"github.com/HXSecurity/DongTai-agent-go/model/request"
-	"github.com/HXSecurity/DongTai-agent-go/service/version"
 	"github.com/HXSecurity/DongTai-agent-go/utils"
 	"github.com/pkg/errors"
 	"io/fs"
@@ -15,20 +16,6 @@ import (
 	"runtime"
 	"strings"
 )
-
-var buildInfoMagic = []byte("\xff Go buildinf:")
-
-// An exe is a generic interface to an OS executable (ELF, Mach-O, PE, XCOFF).
-type exe interface {
-	// Close closes the underlying file.
-	Close() error
-
-	// ReadData reads and returns up to size byte starting at virtual address addr.
-	ReadData(addr, size uint64) ([]byte, error)
-
-	// DataStart returns the writable data segment start address.
-	DataStart() uint64
-}
 
 // GenAQLForGolang 为golang组件生成aql
 func GenAQLForGolang(packageName, version string) string {
@@ -52,33 +39,20 @@ func isExe(file string, info fs.FileInfo) bool {
 
 // 从二进制文件读取包信息
 func scanFile(file string, mustPrint bool) (packages []request.Component, agentVersion string) {
-
-	i, err := os.Stat(file)
-	info := i
-
-	if !isExe(file, info) {
-		if mustPrint {
-			fmt.Fprintf(os.Stderr, "%s: not executable file\n", file)
-		}
-		return
-	}
-
-	x, err := version.OpenExe(file)
+	bi, err := buildinfo.ReadFile(file)
 	if err != nil {
 		if mustPrint {
-			fmt.Fprintf(os.Stderr, "%s: %v\n", file, err)
+			if pathErr := (*os.PathError)(nil); errors.As(err, &pathErr) && filepath.Clean(pathErr.Path) == filepath.Clean(file) {
+				fmt.Fprintf(os.Stderr, "%v\n", file)
+			} else {
+				fmt.Fprintf(os.Stderr, "%s: %v\n", file, err)
+			}
 		}
-		return
+		return packages, agentVersion
 	}
-	defer x.Close()
-
-	vers, mod := findVers(x)
-	if vers == "" {
-		if mustPrint {
-			fmt.Fprintf(os.Stderr, "%s: go version not found\n", file)
-		}
-		return
-	}
+	fmt.Printf("%s: %s\n", file, bi.GoVersion)
+	bi.GoVersion = "" // suppress printing go version again
+	mod := bi.String()
 
 	li := strings.Split(mod[:len(mod)-1], "\n")
 	for i := range li {
@@ -140,61 +114,4 @@ func getCurrentPath() (string, error) {
 		return "", errors.New(`error: Can't find "/" or "\".`)
 	}
 	return string(path[0 : i+1]), nil
-}
-
-func findVers(x exe) (vers, mod string) {
-	// Read the first 64kB of text to find the build info blob.
-	text := x.DataStart()
-	data, err := x.ReadData(text, 64*1024)
-	if err != nil {
-		return
-	}
-	for ; !bytes.HasPrefix(data, buildInfoMagic); data = data[32:] {
-		if len(data) < 32 {
-			return
-		}
-	}
-
-	// Decode the blob.
-	ptrSize := int(data[14])
-	bigEndian := data[15] != 0
-	var bo binary.ByteOrder
-	if bigEndian {
-		bo = binary.BigEndian
-	} else {
-		bo = binary.LittleEndian
-	}
-	var readPtr func([]byte) uint64
-	if ptrSize == 4 {
-		readPtr = func(b []byte) uint64 { return uint64(bo.Uint32(b)) }
-	} else {
-		readPtr = bo.Uint64
-	}
-	vers = readString(x, ptrSize, readPtr, readPtr(data[16:]))
-	if vers == "" {
-		return
-	}
-	mod = readString(x, ptrSize, readPtr, readPtr(data[16+ptrSize:]))
-	if len(mod) >= 33 && mod[len(mod)-17] == '\n' {
-		// Strip module framing.
-		mod = mod[16 : len(mod)-16]
-	} else {
-		mod = ""
-	}
-	return
-}
-
-// readString returns the string at address addr in the executable x.
-func readString(x exe, ptrSize int, readPtr func([]byte) uint64, addr uint64) string {
-	hdr, err := x.ReadData(addr, uint64(2*ptrSize))
-	if err != nil || len(hdr) < 2*ptrSize {
-		return ""
-	}
-	dataAddr := readPtr(hdr)
-	dataLen := readPtr(hdr[ptrSize:])
-	data, err := x.ReadData(dataAddr, dataLen)
-	if err != nil || uint64(len(data)) < dataLen {
-		return ""
-	}
-	return string(data)
 }
