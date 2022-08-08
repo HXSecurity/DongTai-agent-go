@@ -4,13 +4,17 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
+	"strconv"
+
 	"github.com/HXSecurity/DongTai-agent-go/api"
+	"github.com/HXSecurity/DongTai-agent-go/core/grpc/unaryInterceptor"
 	"github.com/HXSecurity/DongTai-agent-go/global"
 	"github.com/HXSecurity/DongTai-agent-go/model/request"
 	"github.com/HXSecurity/DongTai-agent-go/utils"
+	"github.com/brahma-adshonor/gohook"
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
-	"strconv"
 )
 
 const (
@@ -22,8 +26,20 @@ const (
 )
 
 func NewServer(opt ...grpc.ServerOption) *grpc.Server {
-	opt = append(opt, grpc.UnaryInterceptor(interceptor))
-	return NewServerT(opt...)
+	interceptors := unaryInterceptor.UnaryServerInterceptors
+	interceptors = append(interceptors, interceptor)
+
+	gohook.UnHook(grpc.UnaryInterceptor)
+
+	var newOpt []grpc.ServerOption
+	for i := range opt {
+		if opt[i] != nil {
+			newOpt = append(newOpt, opt[i])
+		}
+	}
+
+	newOpt = append(newOpt, grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(interceptors...)))
+	return NewServerT(newOpt...)
 }
 
 // interceptor 一元拦截器

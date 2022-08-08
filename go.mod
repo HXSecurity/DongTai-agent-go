@@ -17,6 +17,7 @@ require (
 	github.com/elazarl/goproxy v0.0.0-20210801061803-8e322dfb79c4 // indirect
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/gorilla/rpc v1.2.0
+	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/jinzhu/now v1.1.3 // indirect
 	github.com/json-iterator/go v1.1.11 // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
@@ -32,5 +33,3 @@ require (
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 	moul.io/http2curl v1.0.0 // indirect
 )
-
-
