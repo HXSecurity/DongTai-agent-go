@@ -7,6 +7,7 @@ func (g *Grpc) GetHook() []string {
 	return []string{
 		"grpcClientConn",
 		"grpcNewServer",
+		"grpcUnaryInterceptor",
 	}
 }
 
