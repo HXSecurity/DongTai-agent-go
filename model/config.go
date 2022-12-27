@@ -6,4 +6,5 @@ type Config struct {
 	DongtaiGoProjectName    string `yaml:"DongtaiGoProjectName"`
 	DongtaiGoProjectVersion string `yaml:"DongtaiGoProjectVersion"`
 	DongtaiGoProjectCreate  bool   `yaml:"DongtaiGoProjectCreate"`
+	DongtaiGoAgentToken     string `yaml:"DongtaiGoAgentToken"`
 }

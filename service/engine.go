@@ -86,7 +86,7 @@ func AgentRegister() (err error) {
 	if global.Config.DongtaiGoProjectVersion != "" {
 		projectName = global.Config.DongtaiGoProjectName
 	}
-	name := OS + "-" + hostname + "-" + version
+	name := OS + "-" + hostname + "-" + version + "-" + global.Config.DongtaiGoAgentToken
 	interfaces, err := net.Interfaces()
 	if err != nil {
 		return
