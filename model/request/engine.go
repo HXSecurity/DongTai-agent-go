@@ -25,6 +25,8 @@ type AgentRegisterReq struct {
 	ServerEnv         string `json:"serverEnv"`
 	Pid               string `json:"pid"`
 	ProjectVersion    string `json:"projectVersion"`
+	ProjectGroupId    int    `json:"projectGroupId"`
+	ProjectTemplateId int    `json:"projectTemplateId"`
 }
 
 type HookRuleReq struct {

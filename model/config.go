@@ -1,9 +1,11 @@
 package model
 
 type Config struct {
-	DongtaiGoOpenapi        string `yaml:"DongtaiGoOpenapi"`
-	DongtaiGoToken          string `yaml:"DongtaiGoToken"`
-	DongtaiGoProjectName    string `yaml:"DongtaiGoProjectName"`
-	DongtaiGoProjectVersion string `yaml:"DongtaiGoProjectVersion"`
-	DongtaiGoProjectCreate  bool   `yaml:"DongtaiGoProjectCreate"`
+	DongtaiGoOpenapi           string `yaml:"DongtaiGoOpenapi"`
+	DongtaiGoToken             string `yaml:"DongtaiGoToken"`
+	DongtaiGoProjectName       string `yaml:"DongtaiGoProjectName"`
+	DongtaiGoProjectVersion    string `yaml:"DongtaiGoProjectVersion"`
+	DongtaiGoProjectCreate     bool   `yaml:"DongtaiGoProjectCreate"`
+	DongtaiGoProjectGroupId    int    `yaml:"DongtaiGoProjectGroupId"`
+	DongtaiGoProjectTemplateId int    `yaml:"DongtaiGoProjectTemplateId"`
 }

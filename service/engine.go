@@ -145,6 +145,8 @@ func AgentRegister() (err error) {
 		ServerPath:        filePath,
 		ServerEnv:         encodeEnv,
 		Pid:               strconv.Itoa(pid),
+		ProjectGroupId:    global.Config.DongtaiGoProjectGroupId,
+		ProjectTemplateId: global.Config.DongtaiGoProjectTemplateId,
 	}
 	go func() {
 		for {

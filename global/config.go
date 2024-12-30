@@ -26,10 +26,15 @@ func InitViper() {
 	var version string
 	var name string
 	var auto bool
+	var projectGroupId int
+	var projectTemplateId int
 
 	flag.StringVar(&version, "DongtaiGoProjectVersion", "v1.0.0", "Project Version")
 	flag.StringVar(&name, "DongtaiGoProjectName", "GO Project", "Project Name")
 	flag.BoolVar(&auto, "DongtaiGoProjectCreate", true, "Auto Create Project")
+	flag.IntVar(&projectGroupId, "DongtaiGoProjectGroupId", 1, "Group ID")
+	flag.IntVar(&projectTemplateId, "DongtaiGoProjectTemplateId", 1, "Template ID")
+
 	flag.Parse()
 	if version != "v1.0.0" {
 		Config.DongtaiGoProjectVersion = version
@@ -40,5 +45,12 @@ func InitViper() {
 	if auto != true {
 		Config.DongtaiGoProjectCreate = auto
 	}
+	if projectGroupId != 1 {
+		Config.DongtaiGoProjectGroupId = projectGroupId
+	}
+	if projectTemplateId != 1 {
+		Config.DongtaiGoProjectTemplateId = projectTemplateId
+	}
+
 	fmt.Println(Config)
 }
